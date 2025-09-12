@@ -8,6 +8,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 import datetime as d
 import time
 import os
+import threading
 
 
 # Define scope - what APIs you want to access
@@ -60,6 +61,15 @@ def load_data():
 load_data()
 
 app = Flask(__name__)
+
+def schedule_data_load():
+    while True:
+        load_data()
+        time.sleep(60 * 60 * 12)
+
+# Start background thread
+threading.Thread(target=schedule_data_load, daemon=True).start()
+
 app.secret_key = 'something_secure_and_secret'
 app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 app.config['SESSION_COOKIE_SECURE'] = True
@@ -386,8 +396,5 @@ def wake_up():
    return "Wake"
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0")
 
-while True: 
-    load_data()
-    time.sleep(60*60*12)
