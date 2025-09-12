@@ -18,7 +18,7 @@ creds_json = os.environ.get("GOOGLE_CREDS_JSON")
 creds_dict = json.loads(creds_json)
 
 # Load your service account credentials JSON file
-creds = ServiceAccountCredentials.from_json_keyfile_name(creds_dict, scope)
+creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 
 
 
