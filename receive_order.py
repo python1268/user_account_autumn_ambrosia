@@ -7,15 +7,19 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import datetime as d
 import time
+import os
 
 
 # Define scope - what APIs you want to access
 scope = ['https://spreadsheets.google.com/feeds',
         'https://www.googleapis.com/auth/drive']
 
+creds_json = os.environ.get("GOOGLE_CREDS_JSON")
+creds_dict = json.loads(creds_json)
 
 # Load your service account credentials JSON file
-creds = ServiceAccountCredentials.from_json_keyfile_name('/Users/jayren/Desktop/Developer Files/private/turing-emitter-462013-b7-dc493eac2ede.json', scope)
+creds = ServiceAccountCredentials.from_json_keyfile_name(creds_dict, scope)
+
 
 
 # Authorize the client
