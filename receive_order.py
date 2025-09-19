@@ -71,7 +71,7 @@ def schedule_data_load():
 threading.Thread(target=schedule_data_load, daemon=True).start()
 
 app.secret_key = 'something_secure_and_secret'
-app.config['SESSION_COOKIE_SAMESITE'] = 'None'
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 app.config['SESSION_COOKIE_SECURE'] = True
 CORS(app,resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 """
