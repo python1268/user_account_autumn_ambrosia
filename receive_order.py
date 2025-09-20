@@ -48,11 +48,13 @@ def write_order(order,customer):
 def load_data():
     global name_list
     global topping_list
+    global product_topping_list
     global price_list
     global topping_price
     name_list = sheet_product.col_values(1)[1:]
     price_list = sheet_product.col_values(2)[1:]
-    topping_list = sheet_product.col_values(3)[1:]
+    product_topping_list = sheet_product.col_values(3)[1:]
+    topping_list = sheet_product.col_values(4)[1:]
     topping_price = sheet_product_two.get_all_values()
     print(name_list)
     print(topping_list)
@@ -135,6 +137,8 @@ def order_view():
                  if name not in name_list:
                      print(f"name")
                      return f"We do not have {name} in our menu"
+                 else:
+                     session["name_index"] = name_list.index(name)
                  
                  if quantity > 40:
                      print(quantity)
@@ -158,6 +162,10 @@ def order_view():
                              break
 
                  print("TOPPING PRICE LIST:", topping_price)
+
+                 if session["topping"] in list(product_topping_list[session["name_index"]].split(", ")): 
+                         
+                 
 
                  for y in topping_price:
                      if topping == y[0]:
