@@ -83,7 +83,7 @@ app.config.update(
 CORS(
     app,
     supports_credentials=True,
-    origins=["https://autumn-ambrosia.pages.dev/#"],
+    origins=["https://autumn-ambrosia.pages.dev/#","https://autumn-ambrosia.pages.dev/"],
     methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Content-Type", "Authorization"]
 )
