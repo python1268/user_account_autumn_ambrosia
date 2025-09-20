@@ -144,9 +144,6 @@ def order_view():
                      print(quantity)
                      return f"Too many"
                  
-                 if topping not in topping_list:
-                     print(topping)
-                     return f"We do not have {topping} in our topping menu"
                  print("Run")
                  place.append(name)
                  place.append(quantity)
@@ -176,7 +173,7 @@ def order_view():
                          else:
                                 print("Failed")
                  else:
-                         return "No topping found"
+                        return f"We do not have {session["topping"]} in our topping menu"
                  ordered.append(place)
          print("Running")
          session["ordered"] = ordered
