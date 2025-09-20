@@ -2,6 +2,7 @@ from flask import Flask, render_template_string, redirect, url_for, request,sess
 from flask_cors import CORS
 #from flask_limiter import Limiter
 #from flask_limiter.util import get_remote_address
+from flask_session import Session
 import json
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
@@ -70,10 +71,14 @@ def schedule_data_load():
 # Start background thread
 threading.Thread(target=schedule_data_load, daemon=True).start()
 
-app.secret_key = 'something_secure_and_secret'
-app.config['SESSION_COOKIE_SAMESITE'] = 'None'
-app.config['SESSION_COOKIE_SECURE'] = True
-CORS(app,resources={r"/*": {"origins": "*"}}, supports_credentials=True)
+app.config.update(
+    SECRET_KEY='something_secure_and_secret',
+    SESSION_COOKIE_SAMESITE="None",
+    SESSION_COOKIE_SECURE=True,
+    SESSION_TYPE='filesystem'  # ← This makes it truly server-side
+)
+
+Session(app)
 """
 limiter = Limiter(
     get_remote_address,
