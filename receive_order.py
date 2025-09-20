@@ -73,7 +73,7 @@ threading.Thread(target=schedule_data_load, daemon=True).start()
 app.secret_key = 'something_secure_and_secret'
 app.config['SESSION_COOKIE_SAMESITE'] = 'None'
 app.config['SESSION_COOKIE_SECURE'] = True
-CORS(app,resources={r"/*": {"origins": "https://www.w3schools.com"}}, supports_credentials=True)
+CORS(app,resources={r"/*": {"origins": "*"}}, supports_credentials=True)
 """
 limiter = Limiter(
     get_remote_address,
