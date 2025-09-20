@@ -78,6 +78,14 @@ app.config.update(
     SESSION_TYPE='filesystem'  # ← This makes it truly server-side
 )
 
+CORS(
+    app,
+    supports_credentials=True,
+    origins=["https://autumn-ambrosia.pages.dev"],
+    methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"]
+)
+
 Session(app)
 """
 limiter = Limiter(
