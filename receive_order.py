@@ -163,20 +163,20 @@ def order_view():
 
                  print("TOPPING PRICE LIST:", topping_price)
 
-                 if session["topping"] in list(product_topping_list[session["name_index"]].split(", ")): 
-                         
-                 
-
-                 for y in topping_price:
-                     if topping == y[0]:
-                         session["topping_price"] = int(y[1])*quantity
-                         total_price += session["topping_price"]
-                         print(total_price)
-                         place.append(total_price)
-                         total += total_price
-                         print(f"Amount: {total}")
-                         break
-
+                 if session["topping"] in product_topping_list[session["name_index"]].split(", "): 
+                     for y in topping_price:
+                         if session["topping"] == y[0]:
+                           session["topping_price"] = int(y[1])*quantity
+                           total_price += session["topping_price"]
+                           print(total_price)
+                           place.append(total_price)
+                           total += total_price
+                           print(f"Amount: {total}")
+                           break
+                         else:
+                                print("Failed")
+                 else:
+                         return "No topping found"
                  ordered.append(place)
          print("Running")
          session["ordered"] = ordered
