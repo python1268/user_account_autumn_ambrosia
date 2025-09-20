@@ -83,7 +83,7 @@ app.config.update(
 CORS(
     app,
     supports_credentials=True,
-    origins=["https://autumn-ambrosia.pages.dev"],
+    origins=["https://autumn-ambrosia.pages.dev/#"],
     methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Content-Type", "Authorization"]
 )
@@ -119,7 +119,7 @@ def order_view():
          order_json = session["order_json"]
          print(order_json)
 
-         ordered = []
+         session["ordered"] = []
          total = 0
 
          for x in order_items:
@@ -159,7 +159,11 @@ def order_view():
                              break
 
                  print("TOPPING PRICE LIST:", topping_price)
-
+                 
+                 if "total" not in session:
+                      session["total"] = 0
+                      session["total"] += total_price
+                         
                  if session["topping"] in product_topping_list[session["name_index"]].split(", "): 
                      for y in topping_price:
                          if session["topping"] == y[0]:
@@ -167,18 +171,15 @@ def order_view():
                            total_price += session["topping_price"]
                            print(total_price)
                            place.append(total_price)
-                           total += total_price
-                           print(f"Amount: {total}")
+                           session["total"] += total_price
+                           print(f"Amount: {session["total"]}")
                            break
                          else:
                                 print("Failed")
                  else:
                         return f"We do not have {session["topping"]} in our topping menu"
-                 ordered.append(place)
+                 session["ordered"].append(place)
          print("Running")
-         session["ordered"] = ordered
-         print(ordered)
-         session["total"] = total
          print("ORDERED:", session.get("ordered"))
          print("TOTAL:", session.get("total"))
          return "Success" , 200
@@ -195,7 +196,37 @@ def confirm():
     print(ordered)
 
     if request.method == "POST":
-        write_order(session["receive"],session["customer"])
+                session["email"] = request.form.get("user_email")
+                session["transaction_name"] = request.form.get("transaction_name")
+                session["payment_method"] = request.form.get("payment_method")
+                if session.get("email", None) is None:
+                        return "Please provide your email."
+                if session.get("payment_method", None) is None:
+                        return "Please choose a payment method."
+                elif session.get("payment_method", None) == "cash":
+                        try:
+                           order_dict = json.loads(session["receive"])
+                           order_dict["Email"] = session["email"]
+                           order_dict["Payment_Method"] = session["payment_method"]
+                           order_json = json.dumps(session["receive"],indent=4)
+                           print(order_json)
+                           sheet_customer.append_row([session["customer"],order_json])
+                        except:
+                            return redirect (url_for("gspread_error"))         
+                else:
+                        if session.get("payment_method", "") == "TNG" and session.get("transaction_name" , None) is not None:
+                            try:
+                             order_dict = json.loads(session["receive"])
+                             order_dict["Email"] = session["email"]
+                             order_dict["Payment_Method"] = session["payment_method"]
+                             order_dict["Transaction_Name"] = session["transaction_name"]
+                             order_json = json.dumps(session["receive"],indent=4)
+                             print(order_json)
+                             sheet_customer.append_row([session["customer"],order_json])
+                            except:
+                              return redirect (url_for("gspread_error"))    
+                        else:
+                            return "No transaction name given"
         return render_template_string("""
         <!--Payment Successful-->
 <!DOCTYPE html>
@@ -340,6 +371,16 @@ img {
       #total {
         margin-left: 10px;
       }
+
+      .input_form {
+        display: inline-block;
+        margin-right: 13px;
+      }
+
+      .input_text {
+         border: 0.8px solid black;
+         width: 3em;
+      }
     </style>
   </head>
   <body>
@@ -353,8 +394,8 @@ img {
     
       <h2>Thank you for purchasing our products.</h2>
       <h4>We would like to confirm the order and payment method.</h4>
+
       
-     <form method="POST">
       <div id="order_submit">
         <ul id="up"></ul>
         <img id="image" src="https://img.freepik.com/free-vector/online-order-delivery-service-shipment-internet-shop-basket-cardboard-boxes-buyer-with-laptop-delivery-note-monitor-screen-parcel-vector-isolated-concept-metaphor-illustration_335657-2838.jpg">
@@ -365,44 +406,41 @@ img {
            <h4 class="ordered_label">Item Name: {{y[0]}}</h4>
            <h4 class="ordered_label">Quantity: {{y[1]}}</h4>
            <h4 class="ordered_label">Topping chosen: {{y[2]}}</h4>
-           <h4 class="ordered_label">Total price: {{y[3]}}</h4>
+           <h4 class="ordered_label">Total price: RM{{y[3]}}</h4>
          </div>
           {% endfor %}
         </div>
         <br>
         <h3 id="total">Total amount: RM{{total}}</h3>
         <br>
-        <div id="confirm">
-        <h4 id="confirm_title">Is this the correct order?</h4>
-        <input type="radio" name="yes_no" id="yes" value="yes">
-        <label for="">Yes</label>
         <br>
-        <input type="radio" name="yes_no" id="no" value="no">
-        <label for="">No</label>
-        </div>
-        <br>
-        <br>
-        <fieldset>
+        <form method="POST">
+         <fieldset>
           <h2>Payment method</h2>
           <h4>Choose your payment method below</h4>
-          <input type="radio" name="payment_method" id="payment_method">
+          <input type="radio" name="payment_method" id="payment_cash" value="cash">
           <label for="">Pay on cash</label><br>
-          <input type="radio" name="payment_method" id="payment_method">
+          <input type="radio" name="payment_method" id="payment_touch" value="TNG">
           <label for="">Pay on Touch N'Go</label>
           <div>
-            <p>If you are paying on Touch N'Go please use the QR code below to proceed the payment.</p>
+            <p>If you are paying on Touch N'Go please use the QR code below to proceed the payment and provide your transaction name after paid.</p>
             <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg" id="qr_code">
           </div>
-        </fieldset>
+          <h4 class="input_form">Transaction name:</h4>
+          <input type="text" name="transaction_name" class="input_text" required>
+          <h4 class="input_form">Your email:</h4>
+          <input type="email" name="user_email" class="input_text" required>
+         </fieldset>
+        </form>
         <button>Proceed</button>
         <br>
         <br>
         <ul id="down"></ul>
       </div>
-     </form>
   </body>
 </html>
 """,total=str(total),ordered=ordered)
+
         
 @app.route("/gspread_error")
 #@limiter.limit("4 per minute")
