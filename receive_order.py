@@ -106,6 +106,7 @@ def order_view():
       print("SESSION ID:", request.cookies.get("session"))
       if request.method == "POST":
         if request.is_json:
+         session.clear()
          session["receive"] = dict(request.get_json())
          receive = session["receive"]
          print(receive)
