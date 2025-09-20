@@ -1488,10 +1488,10 @@ function send() {
 
   fetch("https://user-account-autumn-ambrosia.onrender.com",{
     method: "POST",
+    credentials: "include",
     headers: {
     "Content-Type": "application/json"
     },
-    credentials: "include",
     body: JSON.stringify(string_data)
   })
   .then(response => {
