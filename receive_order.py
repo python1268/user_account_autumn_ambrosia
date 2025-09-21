@@ -229,8 +229,8 @@ def confirm():
                               return redirect (url_for("gspread_error"))    
                         else:
                             return "No transaction name given"
-    return render_template_string("""
-        <!--Payment Successful-->
+                return render_template_string("""
+ <!--Payment Successful-->
 <!DOCTYPE html>
 <html>
   <body>
