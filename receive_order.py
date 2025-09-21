@@ -192,7 +192,6 @@ def confirm():
     print("SESSION ID:", request.cookies.get("session"))
     total = session.get("total",0)
     ordered = session.get("ordered",[])
-    session.clear()
     print(total)
     print(ordered)
 
