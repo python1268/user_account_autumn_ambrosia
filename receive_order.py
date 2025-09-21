@@ -197,7 +197,11 @@ def confirm():
     print(ordered)
 
     if request.method == "POST":
+                receive = session.get("receive")
+                customer = session.get("customer")
                 session.clear()
+                session["receive"] = receive
+                session["customer"] = customer
                 session["email"] = request.form.get("user_email")
                 session["transaction_name"] = request.form.get("transaction_name")
                 session["payment_method"] = request.form.get("payment_method")
