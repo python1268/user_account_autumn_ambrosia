@@ -210,7 +210,7 @@ def confirm():
                         return "Please choose a payment method."
                 elif session.get("payment_method", None) == "cash":
                         try:
-                           order_dict = json.loads(session["receive"])
+                           order_dict = session["receive"]
                            order_dict["Email"] = session["email"]
                            order_dict["Payment_Method"] = session["payment_method"]
                            order_json = json.dumps(order_dict,indent=4)
@@ -222,7 +222,7 @@ def confirm():
                 else:
                         if session.get("payment_method", "") == "TNG" and session.get("transaction_name" , None) is not None:
                             try:
-                             order_dict = json.loads(session["receive"])
+                             order_dict = session["receive"]
                              order_dict["Email"] = session["email"]
                              order_dict["Payment_Method"] = session["payment_method"]
                              order_dict["Transaction_Name"] = session["transaction_name"]
