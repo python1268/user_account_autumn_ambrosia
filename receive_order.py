@@ -169,11 +169,11 @@ def order_view():
                          if session["topping"] == y[0]:
                            session["topping_price"] = int(y[1])*quantity
                            total_price += session["topping_price"]
+                           print(product_topping_list[session["name_index"]].split(", "))
                            print(total_price)
                            place.append(total_price)
                            session["total"] += total_price
                            print(f"Amount: {session["total"]}")
-                           break
                          else:
                                 print("Failed")
                  else:
