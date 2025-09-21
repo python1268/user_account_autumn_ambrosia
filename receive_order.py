@@ -210,7 +210,7 @@ def confirm():
                            order_dict = json.loads(session["receive"])
                            order_dict["Email"] = session["email"]
                            order_dict["Payment_Method"] = session["payment_method"]
-                           order_json = json.dumps(session["receive"],indent=4)
+                           order_json = json.dumps(order_dict,indent=4)
                            print(order_json)
                            sheet_customer.append_row([session["customer"],order_json])
                         except:
@@ -222,11 +222,11 @@ def confirm():
                              order_dict["Email"] = session["email"]
                              order_dict["Payment_Method"] = session["payment_method"]
                              order_dict["Transaction_Name"] = session["transaction_name"]
-                             order_json = json.dumps(session["receive"],indent=4)
+                             order_json = json.dumps(order_dict,indent=4)
                              print(order_json)
                              sheet_customer.append_row([session["customer"],order_json])
                             except:
-                              return redirect (url_for("gspread_error"))    
+                              return redirect(url_for("gspread_error"))    
                         else:
                             return "No transaction name given"
                 return render_template_string("""
