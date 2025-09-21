@@ -189,10 +189,10 @@ def order_view():
 #@limiter.limit("4 per minute")
 #@limiter.limit("9 per hour")
 def confirm():
-    session.clear()
     print("SESSION ID:", request.cookies.get("session"))
     total = session.get("total",0)
     ordered = session.get("ordered",[])
+    session.clear()
     print(total)
     print(ordered)
 
