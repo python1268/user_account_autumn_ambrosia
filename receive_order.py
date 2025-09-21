@@ -216,8 +216,9 @@ def confirm():
                            order_json = json.dumps(order_dict,indent=4)
                            print(order_json)
                            sheet_customer.append_row([session["customer"],order_json])
-                        except:
-                            return redirect (url_for("gspread_error"))         
+                        except Exception as e:
+                            print(f"Error in confirm: {str(e)}")
+                            return redirect(url_for("gspread_error"))         
                 else:
                         if session.get("payment_method", "") == "TNG" and session.get("transaction_name" , None) is not None:
                             try:
@@ -228,7 +229,8 @@ def confirm():
                              order_json = json.dumps(order_dict,indent=4)
                              print(order_json)
                              sheet_customer.append_row([session["customer"],order_json])
-                            except:
+                            except Exception as e:
+                              print(f"Error in confirm: {str(e)}")
                               return redirect(url_for("gspread_error"))    
                         else:
                             return "No transaction name given"
