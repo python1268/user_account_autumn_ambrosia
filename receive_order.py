@@ -376,12 +376,12 @@ img {
 
       .input_form {
         display: inline-block;
-        margin-right: 13px;
+        margin-right: 15px;
       }
 
       .input_text {
          border: 0.8px solid black;
-         width: 3em;
+         width: 5em;
       }
     </style>
   </head>
@@ -433,15 +433,15 @@ img {
           <h4 class="input_form">Your email:</h4>
           <input type="email" name="user_email" class="input_text" required>
          </fieldset>
-        </form>
         <button>Proceed</button>
+        </form>
         <br>
         <br>
         <ul id="down"></ul>
       </div>
   </body>
 </html>
-""",total=str(total),ordered=ordered)
+""",total=str(session["total"]),ordered=session["ordered"])
 
         
 @app.route("/gspread_error")
