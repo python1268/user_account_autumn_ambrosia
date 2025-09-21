@@ -441,7 +441,7 @@ img {
       </div>
   </body>
 </html>
-""",total=str(session["total"]),ordered=session["ordered"])
+""",total=str(total),ordered=ordered)
 
         
 @app.route("/gspread_error")
