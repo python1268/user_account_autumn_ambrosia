@@ -107,8 +107,8 @@ for x,y,z in zip(name_list,topping_list,price_list):
 def order_view():
       print("SESSION ID:", request.cookies.get("session"))
       if request.method == "POST":
+        session.clear()
         if request.is_json:
-         session.clear()
          session["receive"] = dict(request.get_json())
          receive = session["receive"]
          print(receive)
@@ -189,6 +189,7 @@ def order_view():
 #@limiter.limit("4 per minute")
 #@limiter.limit("9 per hour")
 def confirm():
+    session.clear()
     print("SESSION ID:", request.cookies.get("session"))
     total = session.get("total",0)
     ordered = session.get("ordered",[])
@@ -196,6 +197,7 @@ def confirm():
     print(ordered)
 
     if request.method == "POST":
+                session.clear()
                 session["email"] = request.form.get("user_email")
                 session["transaction_name"] = request.form.get("transaction_name")
                 session["payment_method"] = request.form.get("payment_method")
