@@ -100,6 +100,7 @@ product_list = []
 for x,y,z in zip(name_list,topping_list,price_list):
     product_list.append([x,y,float(z)])
     print(product_list)
+        
 @app.route("/order")
 def index():
         return render_template_string("""
@@ -961,224 +962,8 @@ img {vertical-align: middle;}
      }
   </style>
 </head>
+
 <body>
-
-
-<!--No internet-->
-<div id="no_internet_screen">
-  <h1>No internet connection</h1>
-  <h3>Please connect to the internet and try again.</h3>
-  <svg width="100px" height="100px" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-  <title>wifi-error-solid</title>
-  <g id="Layer_2" data-name="Layer 2">
-    <g id="invisible_box" data-name="invisible box">
-      <rect width="48" height="48" fill="none"/>
-    </g>
-    <g id="Q3_icons" data-name="Q3 icons">
-      <g>
-        <path d="M19.9,27.3l-.2-1.7a15.6,15.6,0,0,0-7.4,4.9,1.9,1.9,0,0,0-.4,1.2,2,2,0,0,0,.4,1.3,2,2,0,0,0,3.1,0,11.2,11.2,0,0,1,5.3-3.5A3.5,3.5,0,0,1,19.9,27.3Z"/>
-        <path d="M28.3,25.6l-.2,1.7a3.5,3.5,0,0,1-.8,2.2A11.2,11.2,0,0,1,32.6,33a2,2,0,0,0,3.1,0,2.1,2.1,0,0,0,0-2.5A15.6,15.6,0,0,0,28.3,25.6Z"/>
-        <path d="M19.1,17.5A23,23,0,0,0,7.5,23.9a2,2,0,0,0-.6,1.4,2.8,2.8,0,0,0,.4,1.2,1.9,1.9,0,0,0,3,.2,18.8,18.8,0,0,1,9.1-5.1Z"/>
-        <path d="M28.9,17.5l-.3,4.1a18.8,18.8,0,0,1,9.1,5.1,1.9,1.9,0,0,0,3-.2,2,2,0,0,0-.2-2.6A23,23,0,0,0,28.9,17.5Z"/>
-        <path d="M18.5,9.5A32,32,0,0,0,2.6,17.4a2.1,2.1,0,0,0-.2,2.7h0a2,2,0,0,0,3,.2,27.7,27.7,0,0,1,13.4-6.8Z"/>
-        <path d="M45.4,17.4A32,32,0,0,0,29.5,9.5l-.3,4a27.7,27.7,0,0,1,13.4,6.8,2,2,0,0,0,3-.2h0A2.1,2.1,0,0,0,45.4,17.4Z"/>
-        <circle cx="24" cy="38" r="5"/>
-        <path d="M23.9,29h.2a1.9,1.9,0,0,0,2-1.9L27.7,7a3.7,3.7,0,1,0-7.4,0l1.6,20.1A1.9,1.9,0,0,0,23.9,29Z"/>
-      </g>
-    </g>
-  </g>
-</svg>
-</div>
-
-
-
-<!-- Homepage -->
-<div id="homepage">
-  <ul id="mobile_nav">
-    <li id="name">Autumn's Ambrosia</li>
-    <li id="burger_list">
-      <input type="checkbox" id="hamburger_radio" hidden="">
-      <label for="hamburger_radio">
-        <img src="https://static.thenounproject.com/png/462023-200.png" id="hamburger_icon" class="icon">
-      </label>
-      <div id="hamburger_container">
-        <ul id="hamburger_group">
-          <li class="hamburger_item" id="home_hamburger" onclick="navigation='home';navigate()">Home</li>
-          <li class="hamburger_item" onclick="navigation='about';navigate()">About</li>
-          <li class="hamburger_item" onclick="navigation='cart';navigate()">Cart</li>
-          <li class="hamburger_item" onclick="navigation='menu_preview';navigate()">Menu Preview</li>
-          <li class="hamburger_item" onclick="navigation='order';navigate()">Main Menu</li>
-        </ul>
-      </div>
-    </li>
-    <li class="mobile_icon" onclick="navigation='about';navigate()">
-      <div>
-        <img class="icon" id="about_icon" src="https://cdn-icons-png.freepik.com/256/12099/12099654.png?semt=ais_hybrid">
-        <p class="homepage_uppertext">About</p>
-      </div>
-    </li>
-    <li class="mobile_icon" onclick="navigation='cart';navigate()">
-      <div>
-        <img id="cart_icon" class="icon" src="https://cdn-icons-png.flaticon.com/512/3081/3081840.png">
-        <p class="homepage_uppertext">Cart</p>
-      </div>
-    </li>
-    <li id="menu" onclick="navigation='menu_preview';navigate()">
-      <div>
-        <img class="icon" src="https://cdn-icons-png.flaticon.com/512/971/971709.png" alt="Menu icon">
-        <p class="homepage_uppertext">Menu</p>
-      </div>
-    </li>
-  </ul>
-
-  <br>
-
-  <div id="find">
-    <img id="logo_autumn" src="https://i.ibb.co/yFpXyxP3/Black-White-Flat-Illustrative-Floral-Design-Logo-2-removebg-preview.png">
-    <h2 id="welcome">Hello, what would you like to search today?</h2>
-
-    <button id="find_food2" onclick="navigation='order';navigate()">Order Now</button>
-    <button id="sign_out_button" onclick="delete_acc();">Sign out</button>
-  </div>
-</div>
-
-<!-- Order Page -->
-<div id="order_page" style="display: none;">
-  <ul id="order_navigation">
-    <li id="cancel_button_order" onclick="navigation='home';navigate()"><button id="cancel_button_order_inner">x</button></li>
-    <li id="cart_link"><a href="#" id="cart_href" onclick="navigation='cart';navigate()">My cart</a></li>
-  </ul>
-
-  <br><br><br>
-
-  <h1 class="order_type_title">Drinks</h1>
-  <div class="order_img_container" id="drink_menu">
-  </div>
-  <hr>
-</div>
-
-
-
-<!--Add to cart-->
-<div id="add_to_cart_page">
-    <img id="image_about_header" class="image_about_waves" src="https://img.freepik.com/free-vector/modern-flowing-blue-wave-banner-white-background_1035-18960.jpg">
-    <div id="template_add_to_cart_back">
-     <img src="https://cdn-icons-png.flaticon.com/512/3964/3964488.png" id="add_to_cart_back" onclick="navigation='order';delete_dropdown();navigate();">
-    </div>
-    <br>
-    <div id="upper_section_add_to_cart">
-      </div>
-     
-     </div>
-
-  <!--Cart page-->
-    <div id="cart_page">
-    <ul id="cart_navigation_bar">
-            <li class="cart_navigation_item"><img id="cart_arrow_back" src="https://png.pngtree.com/png-vector/20220623/ourmid/pngtree-back-arrow-backward-direction-previous-png-image_5198415.png" onclick="navigation='home';navigate()"></li>
-            <li id="cart_navigation_back" class="cart_navigation_item">Back</li>
-            </ul>
-      <div id="cart_inner"></div>
-   </div>
-
-   <!--About page-->
-<div id="about_page">
-        <ul id="about_navigation_bar">
-            <li class="about_navigation_item"><img id="arrow_back" src="https://png.pngtree.com/png-vector/20220623/ourmid/pngtree-back-arrow-backward-direction-previous-png-image_5198415.png" onclick="navigation='home';navigate()"></li>
-            <li id="about_navigation_back" class="about_navigation_item">Back</li>
-        </ul>
-
-<h1 id="about_title">About us</h1>
-
-<div class="slideshow-container">
-
-<div class="mySlides fade">
-  <div class="numbertext">1 / 3</div>
-  <img src="https://images.immediate.co.uk/production/volatile/sites/30/2023/10/GF01115BackPagePSOCocktailspreview-829355e.jpg?quality=90&resize=708,643" style="width:100%">
-  <div class="text">Caption Text</div>
-</div>
-
-<div class="mySlides fade">
-  <div class="numbertext">2 / 3</div>
-  <img src="https://images.immediate.co.uk/production/volatile/sites/30/2023/10/GF01115BackPagePSOCocktailspreview-829355e.jpg?quality=90&resize=708,643" style="width:100%">
-  <div class="text">Caption Two</div>
-</div>
-
-<div class="mySlides fade">
-  <div class="numbertext">3 / 3</div>
-  <img src="https://images.immediate.co.uk/production/volatile/sites/30/2023/10/GF01115BackPagePSOCocktailspreview-829355e.jpg?quality=90&resize=708,643" style="width:100%">
-  <div class="text">Caption Three</div>
-</div>
-
-<a class="prev" onclick="plusSlides(-1)">❮</a>
-<a class="next" onclick="plusSlides(1)">❯</a>
-
-</div>
-<br>
-
-<div style="text-align:center">
-  <span class="dot" onclick="currentSlide(1)"></span> 
-  <span class="dot" onclick="currentSlide(2)"></span> 
-  <span class="dot" onclick="currentSlide(3)"></span> 
-</div>
-<br>
-<hr>
-<br>
-<div>
- <img src="https://images.immediate.co.uk/production/volatile/sites/30/2023/10/GF01115BackPagePSOCocktailspreview-829355e.jpg?quality=90&resize=708,643" id="drinks_image">
- <p id="description_about">We offer some....</p>
-</div>
-<br>
-<hr>
-<div id="name_content">
-  <div>
-       <h1 id="our_drinks">Our drinks</h1>
-       
-       <p id="here_are">Here are some of our famous drinks.</p>
-   </div>
-        <div class="each_person">
-            <img src="https://i.ibb.co/MyQ7Sbbd/img1.png" class="image_about" alt="image">
-            <h3 class="name_each_person">Lychee Sensation</h3>
-        </div>
-         <div class="each_person">
-            <img src="https://ik.imagekit.io/jasonooi/Add%20a%20heading.zip%20-%204.jpeg?updatedAt=1754308163899" class="image_about" alt="image">
-            <h3 class="name_each_person">Choko Deez Nuts</h3>
-        </div>
-        <div class="each_person">
-            <img src="https://ik.imagekit.io/jasonooi/Add%20a%20heading.jpeg?updatedAt=1754308163956" class="image_about" alt="image">
-            <h3 class="name_each_person">Spooky Choc</h3>
-        </div>
-        <div class="each_person">
-            <img src="https://ik.imagekit.io/jasonooi/Add%20a%20heading.zip%20-%209.jpeg?updatedAt=1754308163882" class="image_about" alt="image">
-            <h3 class="name_each_person">Boba Tea</h3>
-        </div>
-        </div>
-      </div>
-    
-    
-     <fieldset id="create_screen">
-        <h1>Log in</h1>
-        <div class="container">
-         <h4 class="create_h4">Name (Full name):</h4>
-         <input type="text" class="create_input" id="create_name" required>
-        </div>
-        <div>
-         <h4>If you are the Taylor Puchong students, please choose the class or put "other".</h4>
-         <h4 class="create_h4">Class:</h4>
-         <input type="text" class="create_input" id="create_class" required>
-        </div>
-        <div>
-         <h4 class="create_h4">Email: </h4>
-         <input type="email" class="create_input" id="create_email" required>
-        </div>
-        <div>
-         <h4 class="create_h4">Phone number:</h4>
-         <input type="tel" class="create_input" id="create_phone">
-        </div>
-        <button id="create_button" type="button" onclick="get_user();">Log in</button>
-  </fieldset>
- 
-</body>
-</html>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.8.0/sql-wasm.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
 <script>
@@ -1733,6 +1518,222 @@ function showSlides(n) {
   dots[slideIndex-1].className += " active";
 }
 </script>
+
+<!--No internet-->
+<div id="no_internet_screen" style="display: none;">
+  <h1>No internet connection</h1>
+  <h3>Please connect to the internet and try again.</h3>
+  <svg width="100px" height="100px" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+  <title>wifi-error-solid</title>
+  <g id="Layer_2" data-name="Layer 2">
+    <g id="invisible_box" data-name="invisible box">
+      <rect width="48" height="48" fill="none"/>
+    </g>
+    <g id="Q3_icons" data-name="Q3 icons">
+      <g>
+        <path d="M19.9,27.3l-.2-1.7a15.6,15.6,0,0,0-7.4,4.9,1.9,1.9,0,0,0-.4,1.2,2,2,0,0,0,.4,1.3,2,2,0,0,0,3.1,0,11.2,11.2,0,0,1,5.3-3.5A3.5,3.5,0,0,1,19.9,27.3Z"/>
+        <path d="M28.3,25.6l-.2,1.7a3.5,3.5,0,0,1-.8,2.2A11.2,11.2,0,0,1,32.6,33a2,2,0,0,0,3.1,0,2.1,2.1,0,0,0,0-2.5A15.6,15.6,0,0,0,28.3,25.6Z"/>
+        <path d="M19.1,17.5A23,23,0,0,0,7.5,23.9a2,2,0,0,0-.6,1.4,2.8,2.8,0,0,0,.4,1.2,1.9,1.9,0,0,0,3,.2,18.8,18.8,0,0,1,9.1-5.1Z"/>
+        <path d="M28.9,17.5l-.3,4.1a18.8,18.8,0,0,1,9.1,5.1,1.9,1.9,0,0,0,3-.2,2,2,0,0,0-.2-2.6A23,23,0,0,0,28.9,17.5Z"/>
+        <path d="M18.5,9.5A32,32,0,0,0,2.6,17.4a2.1,2.1,0,0,0-.2,2.7h0a2,2,0,0,0,3,.2,27.7,27.7,0,0,1,13.4-6.8Z"/>
+        <path d="M45.4,17.4A32,32,0,0,0,29.5,9.5l-.3,4a27.7,27.7,0,0,1,13.4,6.8,2,2,0,0,0,3-.2h0A2.1,2.1,0,0,0,45.4,17.4Z"/>
+        <circle cx="24" cy="38" r="5"/>
+        <path d="M23.9,29h.2a1.9,1.9,0,0,0,2-1.9L27.7,7a3.7,3.7,0,1,0-7.4,0l1.6,20.1A1.9,1.9,0,0,0,23.9,29Z"/>
+      </g>
+    </g>
+  </g>
+</svg>
+</div>
+
+
+
+<!-- Homepage -->
+<div id="homepage">
+  <ul id="mobile_nav">
+    <li id="name">Autumn's Ambrosia</li>
+    <li id="burger_list">
+      <input type="checkbox" id="hamburger_radio" hidden="">
+      <label for="hamburger_radio">
+        <img src="https://static.thenounproject.com/png/462023-200.png" id="hamburger_icon" class="icon">
+      </label>
+      <div id="hamburger_container">
+        <ul id="hamburger_group">
+          <li class="hamburger_item" id="home_hamburger" onclick="navigation='home';navigate()">Home</li>
+          <li class="hamburger_item" onclick="navigation='about';navigate()">About</li>
+          <li class="hamburger_item" onclick="navigation='cart';navigate()">Cart</li>
+          <li class="hamburger_item" onclick="navigation='menu_preview';navigate()">Menu Preview</li>
+          <li class="hamburger_item" onclick="navigation='order';navigate()">Main Menu</li>
+        </ul>
+      </div>
+    </li>
+    <li class="mobile_icon" onclick="navigation='about';navigate()">
+      <div>
+        <img class="icon" id="about_icon" src="https://cdn-icons-png.freepik.com/256/12099/12099654.png?semt=ais_hybrid">
+        <p class="homepage_uppertext">About</p>
+      </div>
+    </li>
+    <li class="mobile_icon" onclick="navigation='cart';navigate()">
+      <div>
+        <img id="cart_icon" class="icon" src="https://cdn-icons-png.flaticon.com/512/3081/3081840.png">
+        <p class="homepage_uppertext">Cart</p>
+      </div>
+    </li>
+    <li id="menu" onclick="navigation='menu_preview';navigate()">
+      <div>
+        <img class="icon" src="https://cdn-icons-png.flaticon.com/512/971/971709.png" alt="Menu icon">
+        <p class="homepage_uppertext">Menu</p>
+      </div>
+    </li>
+  </ul>
+
+  <br>
+
+  <div id="find">
+    <img id="logo_autumn" src="https://i.ibb.co/yFpXyxP3/Black-White-Flat-Illustrative-Floral-Design-Logo-2-removebg-preview.png">
+    <h2 id="welcome">Hello, what would you like to search today?</h2>
+
+    <button id="find_food2" onclick="navigation='order';navigate()">Order Now</button>
+    <button id="sign_out_button" onclick="delete_acc();">Sign out</button>
+  </div>
+</div>
+
+<!-- Order Page -->
+<div id="order_page" style="display: none;">
+  <ul id="order_navigation">
+    <li id="cancel_button_order" onclick="navigation='home';navigate()"><button id="cancel_button_order_inner">x</button></li>
+    <li id="cart_link"><a href="#" id="cart_href" onclick="navigation='cart';navigate()">My cart</a></li>
+  </ul>
+
+  <br><br><br>
+
+  <h1 class="order_type_title">Drinks</h1>
+  <div class="order_img_container" id="drink_menu">
+  </div>
+  <hr>
+</div>
+
+
+
+<!--Add to cart-->
+<div id="add_to_cart_page" style="display: none;">
+    <img id="image_about_header" class="image_about_waves" src="https://img.freepik.com/free-vector/modern-flowing-blue-wave-banner-white-background_1035-18960.jpg">
+    <div id="template_add_to_cart_back">
+     <img src="https://cdn-icons-png.flaticon.com/512/3964/3964488.png" id="add_to_cart_back" onclick="navigation='order';delete_dropdown();navigate();">
+    </div>
+    <br>
+    <div id="upper_section_add_to_cart">
+      </div>
+     
+     </div>
+
+  <!--Cart page-->
+    <div id="cart_page" style="display: none;">
+    <ul id="cart_navigation_bar">
+            <li class="cart_navigation_item"><img id="cart_arrow_back" src="https://png.pngtree.com/png-vector/20220623/ourmid/pngtree-back-arrow-backward-direction-previous-png-image_5198415.png" onclick="navigation='home';navigate()"></li>
+            <li id="cart_navigation_back" class="cart_navigation_item">Back</li>
+            </ul>
+      <div id="cart_inner"></div>
+   </div>
+
+   <!--About page-->
+<div id="about_page">
+        <ul id="about_navigation_bar">
+            <li class="about_navigation_item"><img id="arrow_back" src="https://png.pngtree.com/png-vector/20220623/ourmid/pngtree-back-arrow-backward-direction-previous-png-image_5198415.png" onclick="navigation='home';navigate()"></li>
+            <li id="about_navigation_back" class="about_navigation_item">Back</li>
+        </ul>
+
+<h1 id="about_title">About us</h1>
+
+<div class="slideshow-container">
+
+<div class="mySlides fade">
+  <div class="numbertext">1 / 3</div>
+  <img src="https://images.immediate.co.uk/production/volatile/sites/30/2023/10/GF01115BackPagePSOCocktailspreview-829355e.jpg?quality=90&resize=708,643" style="width:100%">
+  <div class="text">Caption Text</div>
+</div>
+
+<div class="mySlides fade">
+  <div class="numbertext">2 / 3</div>
+  <img src="https://images.immediate.co.uk/production/volatile/sites/30/2023/10/GF01115BackPagePSOCocktailspreview-829355e.jpg?quality=90&resize=708,643" style="width:100%">
+  <div class="text">Caption Two</div>
+</div>
+
+<div class="mySlides fade">
+  <div class="numbertext">3 / 3</div>
+  <img src="https://images.immediate.co.uk/production/volatile/sites/30/2023/10/GF01115BackPagePSOCocktailspreview-829355e.jpg?quality=90&resize=708,643" style="width:100%">
+  <div class="text">Caption Three</div>
+</div>
+
+<a class="prev" onclick="plusSlides(-1)">❮</a>
+<a class="next" onclick="plusSlides(1)">❯</a>
+
+</div>
+<br>
+
+<div style="text-align:center">
+  <span class="dot" onclick="currentSlide(1)"></span> 
+  <span class="dot" onclick="currentSlide(2)"></span> 
+  <span class="dot" onclick="currentSlide(3)"></span> 
+</div>
+<br>
+<hr>
+<br>
+<div>
+ <img src="https://images.immediate.co.uk/production/volatile/sites/30/2023/10/GF01115BackPagePSOCocktailspreview-829355e.jpg?quality=90&resize=708,643" id="drinks_image">
+ <p id="description_about">We offer some....</p>
+</div>
+<br>
+<hr>
+<div id="name_content">
+  <div>
+       <h1 id="our_drinks">Our drinks</h1>
+       
+       <p id="here_are">Here are some of our famous drinks.</p>
+   </div>
+        <div class="each_person">
+            <img src="https://i.ibb.co/MyQ7Sbbd/img1.png" class="image_about" alt="image">
+            <h3 class="name_each_person">Lychee Sensation</h3>
+        </div>
+         <div class="each_person">
+            <img src="https://ik.imagekit.io/jasonooi/Add%20a%20heading.zip%20-%204.jpeg?updatedAt=1754308163899" class="image_about" alt="image">
+            <h3 class="name_each_person">Choko Deez Nuts</h3>
+        </div>
+        <div class="each_person">
+            <img src="https://ik.imagekit.io/jasonooi/Add%20a%20heading.jpeg?updatedAt=1754308163956" class="image_about" alt="image">
+            <h3 class="name_each_person">Spooky Choc</h3>
+        </div>
+        <div class="each_person">
+            <img src="https://ik.imagekit.io/jasonooi/Add%20a%20heading.zip%20-%209.jpeg?updatedAt=1754308163882" class="image_about" alt="image">
+            <h3 class="name_each_person">Boba Tea</h3>
+        </div>
+        </div>
+      </div>
+    
+    
+     <fieldset id="create_screen">
+        <h1>Log in</h1>
+        <div class="container">
+         <h4 class="create_h4">Name (Full name):</h4>
+         <input type="text" class="create_input" id="create_name" required>
+        </div>
+        <div>
+         <h4>If you are the Taylor Puchong students, please choose the class or put "other".</h4>
+         <h4 class="create_h4">Class:</h4>
+         <input type="text" class="create_input" id="create_class" required>
+        </div>
+        <div>
+         <h4 class="create_h4">Email: </h4>
+         <input type="email" class="create_input" id="create_email" required>
+        </div>
+        <div>
+         <h4 class="create_h4">Phone number:</h4>
+         <input type="tel" class="create_input" id="create_phone">
+        </div>
+        <button id="create_button" type="button" onclick="get_user();">Log in</button>
+  </fieldset>
+ 
+</body>
+</html>
         """)
 
 
