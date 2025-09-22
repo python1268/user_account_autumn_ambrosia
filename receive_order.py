@@ -77,6 +77,7 @@ app.config.update(
     SECRET_KEY='something_secure_and_secret',
     SESSION_COOKIE_SAMESITE="None",
     SESSION_COOKIE_SECURE=True,
+    SESSION_COOKIE_DOMAIN=".onrender.com"
     SESSION_TYPE='filesystem'  # ← This makes it truly server-side
 )
 
