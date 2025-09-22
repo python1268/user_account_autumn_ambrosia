@@ -1500,7 +1500,7 @@ function send() {
   .then(data => {
     console.log("Server response:", data);
     // Now safe to redirect after session is stored
-    window.open("https://user-account-autumn-ambrosia.onrender.com/confirm");
+    window.location.href = "https://user-account-autumn-ambrosia.onrender.com/confirm";
   })
  }
 
