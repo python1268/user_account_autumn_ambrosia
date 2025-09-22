@@ -1182,7 +1182,7 @@ function add_one(id) {
   }
 
   function delete_cart(id_delete) {
-    if (confirm("Are you sure? \n After you have clicked you cannot undo.")) {
+    if (confirm("Are you sure? After you have clicked you cannot undo.")) {
        id_delete = Number(id_delete)
        db.run('DELETE FROM cart WHERE id = ?',[id_delete]);
        cartpage()
