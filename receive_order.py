@@ -12,9 +12,10 @@ import time
 import os
 import threading
 
+
 from upstash_redis import Redis
 
-r = Redis(url="https://enormous-mastodon-11551.upstash.io", token="********")
+redis = Redis(url="https://enormous-mastodon-11551.upstash.io", token="Ai0fAAIgcDL23TK4rWf-q8NdZupIGB-TT12w74DFiOOo87y559G8Bg")
 
 
 
