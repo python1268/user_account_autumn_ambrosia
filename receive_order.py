@@ -1,8 +1,9 @@
-from flask import Flask, render_template_string, redirect, url_for, request,session
+
+import secrets
+from flask import Flask, render_template_string, redirect, url_for, request,jsonify
 from flask_cors import CORS
 #from flask_limiter import Limiter
 #from flask_limiter.util import get_remote_address
-from flask_session import Session
 import json
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
@@ -11,16 +12,22 @@ import time
 import os
 import threading
 
+from upstash_redis import Redis
+
+r = Redis(url="https://enormous-mastodon-11551.upstash.io", token="********")
+
+
 
 # Define scope - what APIs you want to access
 scope = ['https://spreadsheets.google.com/feeds',
         'https://www.googleapis.com/auth/drive']
 
-creds_json = os.environ.get("GOOGLE_CREDS_JSON")
-creds_dict = json.loads(creds_json)
+#creds_json = os.environ.get("GOOGLE_CREDS_JSON")
+#creds_dict = json.loads(creds_json)
 
 # Load your service account credentials JSON file
-creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+# Load your service account credentials JSON file
+creds = ServiceAccountCredentials.from_json_keyfile_name('/Users/jayren/Desktop/Developer Files/private/turing-emitter-462013-b7-dc493eac2ede.json', scope)
 
 
 
@@ -35,14 +42,6 @@ sheet_product = client.open('Product').sheet1
 
 sheet_product_two = client.open('Product').worksheet('Sheet2')
 
-
-def write_order(order,customer):
-    try:
-     order_json = json.dumps(order,indent=4)
-     print(order_json)
-     sheet_customer.append_row([customer,order_json])
-    except:
-        return redirect (url_for("gspread_error"))
 
 
 def load_data():
@@ -70,17 +69,13 @@ def schedule_data_load():
         load_data()
         time.sleep(60 * 60 * 12)
 
+
+
 # Start background thread
 threading.Thread(target=schedule_data_load, daemon=True).start()
 
-app.config.update(
-    SECRET_KEY='something_secure_and_secret',
-    SESSION_COOKIE_SAMESITE="None",
-    SESSION_COOKIE_SECURE=True,
-    SESSION_COOKIE_DOMAIN = "user-account-autumn-ambrosia.onrender.com",
-    SESSION_TYPE='filesystem'  # ← This makes it truly server-side
-)
 
+"""
 CORS(
     app,
     supports_credentials=True,
@@ -88,8 +83,8 @@ CORS(
     methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Content-Type", "Authorization"]
 )
+"""
 
-Session(app)
 """
 limiter = Limiter(
     get_remote_address,
@@ -101,139 +96,87 @@ product_list = []
 for x,y,z in zip(name_list,topping_list,price_list):
     product_list.append([x,y,float(z)])
     print(product_list)
+    
+CORS(app)
 
+#First (Get token)
+@app.route("/token",methods=["POST"])
+def get_token():
+    token = secrets.token_urlsafe(16)
+    r.set(token,"",ex=200)
+    print(token,flush=True)
+    """
+    users_tokens[token] = {}
+    users_tokens[token]["expire_time"] = time.time() + 60*15
+    """
+    return jsonify({"token": token})
 
-@app.route("/", methods=["GET","POST"])
-#@limiter.limit("4 per minute")
-#@limiter.limit("9 per hour")
-def order_view():
-      print("SESSION ID:", request.cookies.get("session"))
-      if request.method == "POST":
-        session.clear()
-        if request.is_json:
-         session["receive"] = dict(request.get_json())
-         receive = session["receive"]
-         print(receive)
-         session["order_items"] = receive.get("order_items")
-         order_items = session["order_items"]
-         session["customer"] = receive.get("username")
-         session["order_json"] = json.dumps(order_items,indent=4)
-         order_json = session["order_json"]
-         print(order_json)
+#Token received. Then, frontend sends the order and store the data in memory dictionary 
+@app.route("/submit_order", methods=["POST"])
+def submit_order():
+    token = request.args.get("token")
+    if not token or not r.exists(token):
+        print("Error")
+        return jsonify({"error": "Invalid token"}), 401
 
-         session["ordered"] = []
-         total = 0
+    order_data = request.json.get("order_items")  # frontend sends entire order
+    if not order_data:
+        print("Error")
+        return jsonify({"error": "Order data required"}), 400
+    
+    username = request.json.get("username")  # frontend sends entire order
+    if not username:
+        print("Error")
+        return jsonify({"error": "Username required"}), 400
 
-         for x in order_items:
-                 session["name"] = x[0]
-                 name = session["name"]
-                 print(name)
-                 session["quantity"] = int(x[1])
-                 quantity = session["quantity"]
-                 print(quantity)
-                 session["topping"] = x[2]
-                 topping = session["topping"]
-                 print(topping)
-                 place = []
+    # Save final order for this token
+    r.hset(token,mapping={"order":json.dumps(order_data), "customer":username})
+    """
+    users_tokens[token]["order"] = order_data
+    users_tokens[token]["customer"] = username
+    """
 
-                 if name not in name_list:
-                     print(f"name")
-                     return f"We do not have {name} in our menu"
-                 else:
-                     session["name_index"] = name_list.index(name)
-                 
-                 if quantity > 40:
-                     print(quantity)
-                     return f"Too many"
-                 
-                 print("Run")
-                 place.append(name)
-                 place.append(quantity)
-                 place.append(topping)
-                 print(f"place: {place}")
+    return jsonify({"message": "success"})
 
-                 for x in product_list:
-                         if name == x[0]:
-                             session["per_price"] = x[2]
-                             per_price = session["per_price"]
-                             session["total_price"] = per_price*quantity
-                             total_price = session["total_price"] 
-                             break
-
-                 print("TOPPING PRICE LIST:", topping_price)
-                 
-                 if "total" not in session:
-                      session["total"] = 0
-                      session["total"] += total_price
-                         
-                 if session["topping"] in product_topping_list[session["name_index"]].split(", "): 
-                     for y in topping_price:
-                         if session["topping"] == y[0]:
-                           session["topping_price"] = int(y[1])*quantity
-                           total_price += session["topping_price"]
-                           print(product_topping_list[session["name_index"]].split(", "))
-                           print(total_price)
-                           place.append(total_price)
-                           session["total"] += total_price
-                           print(f"Amount: {session["total"]}")
-                         else:
-                                print("Failed")
-                 else:
-                        return f"We do not have {session["topping"]} in our topping menu"
-                 session["ordered"].append(place)
-         print("Running")
-         print("ORDERED:", session.get("ordered"))
-         print("TOTAL:", session.get("total"))
-         return "Success" , 200
-      return "Bad request"
-        
+#After receive success messages, then show the GET 
 @app.route("/confirm",methods=["GET","POST"])
 #@limiter.limit("4 per minute")
 #@limiter.limit("9 per hour")
 def confirm():
-    print("SESSION ID:", request.cookies.get("session"))
-    total = session.get("total",0)
-    ordered = session.get("ordered",[])
-    print(total)
-    print(ordered)
+    token = request.args.get("token")
+    if not token or not r.exists(token):
+        return jsonify({"error": "Invalid token"}), 401
+    
+    orderdata = r.hgetall(token)
+    if "order" in orderdata:
+     orderdata["order"] = json.loads(orderdata["order"])
 
     if request.method == "POST":
-                receive = session.get("receive")
-                customer = session.get("customer")
-                session.clear()
-                session["receive"] = receive
-                session["customer"] = customer
-                session["email"] = request.form.get("user_email")
-                session["transaction_name"] = request.form.get("transaction_name")
-                session["payment_method"] = request.form.get("payment_method")
-                if session.get("email", None) is None:
+                email = request.form.get("user_email")
+                transaction_name = request.form.get("transaction_name")
+                payment_method = request.form.get("payment_method")
+                if email is None:
                         return "Please provide your email."
-                if session.get("payment_method", None) is None:
+                if payment_method is None:
                         return "Please choose a payment method."
-                elif session.get("payment_method", None) == "cash":
+                elif payment_method == "cash":
                         try:
-                           order_dict = session["receive"]
-                           order_dict["Email"] = session["email"]
-                           order_dict["Payment_Method"] = session["payment_method"]
-                           order_json = json.dumps(order_dict,indent=4)
+                           orderdata["Email"] = email
+                           orderdata["Payment_Method"] = payment_method
+                           order_json = json.dumps(orderdata,indent=4)
                            print(order_json)
-                           sheet_customer.append_row([session["customer"],order_json])
+                           sheet_customer.append_row([orderdata["customer"],order_json])
                         except Exception as e:
-                            print(f"Error in confirm: {str(e)}")
-                            return redirect(url_for("gspread_error"))         
+                            return f"Error in confirm: {str(e)}"        
                 else:
-                        if session.get("payment_method", "") == "TNG" and session.get("transaction_name" , None) is not None:
+                        if payment_method == "TNG" and transaction_name is not None:
                             try:
-                             order_dict = session["receive"]
-                             order_dict["Email"] = session["email"]
-                             order_dict["Payment_Method"] = session["payment_method"]
-                             order_dict["Transaction_Name"] = session["transaction_name"]
-                             order_json = json.dumps(order_dict,indent=4)
+                             r.hset(token,mapping={"Email":email, "Payment_Method":payment_method, "Transaction_Name":transaction_name})
+                             order_json = json.dumps(r.hgetall(token),indent=4)
                              print(order_json)
-                             sheet_customer.append_row([session["customer"],order_json])
+                             sheet_customer.append_row([orderdata["customer"],order_json])
                             except Exception as e:
-                              print(f"Error in confirm: {str(e)}")
-                              return redirect(url_for("gspread_error"))    
+                              return f"Error in confirm: {str(e)}"
                         else:
                             return "No transaction name given"
                 return render_template_string("""
@@ -260,7 +203,51 @@ img {
   </style>
 </html>
 """)
+    
+    total = 0
 
+    for thing in orderdata["order"]:
+                 print(thing[0])
+                 thing[1] = int(thing[1])
+                 print(thing[1])
+                 print(thing[2])
+
+                 if thing[0] not in name_list:
+                     print(f"name")
+                     return f"We do not have {thing[0]} in our menu"
+                 else:
+                     name_index = name_list.index(thing[0])
+                 
+                 if thing[1] > 40:
+                     print(thing[1])
+                     return f"Too many"
+                 
+                 print("Run")
+
+                 for x in product_list:
+                         if thing[0] == x[0]:
+                             per_price = x[2]
+                             total_price = per_price*thing[1]
+                             break
+              
+                 if thing[2] in [t.strip() for t in product_topping_list[name_index].split(",")]: 
+                     for y in topping_price:
+                         if thing[2] == y[0]:
+                           extra_topping_price = int(y[1])*thing[1]
+                           total_price += extra_topping_price
+                           print(product_topping_list[name_index].split(", "))
+                           print(total_price)
+                           total += total_price
+                           print(f"Amount: {total}")
+                         else:
+                                print("Failed")
+                 else:
+                        return f"We do not have {thing[2]} in our topping menu"
+    
+    print("Running")
+    orderdata["total"] = total
+    r.hset(token, mapping={k: str(v) for k, v in orderdata.items()})
+    print("TOTAL:", total)
     return render_template_string("""
     <!DOCTYPE html>
 <html>
@@ -448,7 +435,7 @@ img {
       </div>
   </body>
 </html>
-""",total=str(total),ordered=ordered)
+""",total=str(orderdata["total"]),ordered=orderdata["order"])
 
         
 @app.route("/gspread_error")
@@ -463,4 +450,3 @@ def wake_up():
 
 if __name__ == '__main__':
     app.run(debug=False, host="0.0.0.0")
-
