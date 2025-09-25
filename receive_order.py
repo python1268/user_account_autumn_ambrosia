@@ -101,7 +101,7 @@ for x,y,z in zip(name_list,topping_list,price_list):
 CORS(app)
 
 #First (Get token)
-@app.route("/token",methods=["POST"])
+@app.route("/token")
 def get_token():
     token = secrets.token_urlsafe(16)
     r.set(token,"",ex=200)
