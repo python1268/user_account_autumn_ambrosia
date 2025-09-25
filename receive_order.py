@@ -22,13 +22,13 @@ r = Redis(url="https://enormous-mastodon-11551.upstash.io", token="********")
 scope = ['https://spreadsheets.google.com/feeds',
         'https://www.googleapis.com/auth/drive']
 
-#creds_json = os.environ.get("GOOGLE_CREDS_JSON")
-#creds_dict = json.loads(creds_json)
+creds_json = os.environ.get("GOOGLE_CREDS_JSON")
+creds_dict = json.loads(creds_json)
 
 # Load your service account credentials JSON file
 # Load your service account credentials JSON file
-creds = ServiceAccountCredentials.from_json_keyfile_name('/Users/jayren/Desktop/Developer Files/private/turing-emitter-462013-b7-dc493eac2ede.json', scope)
 
+creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 
 
 # Authorize the client
