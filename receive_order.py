@@ -483,7 +483,7 @@ def gspread_error():
 
 @app.route("/wake")
 def wake_up():
-   return "Wake"
+   return "w"
 
 if __name__ == '__main__':
     app.run(debug=False, host="0.0.0.0")
