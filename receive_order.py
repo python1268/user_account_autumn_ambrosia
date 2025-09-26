@@ -133,7 +133,8 @@ def submit_order():
         return jsonify({"error": "Username required"}), 400
 
     # Save final order for this token
-    r.hset(token,mapping={"order":json.dumps(order_data), "customer":username})
+    r.hset(token, "order", json.dumps(order_data))
+    r.hset(token, "customer", username)
     """
     users_tokens[token]["order"] = order_data
     users_tokens[token]["customer"] = username
@@ -174,7 +175,10 @@ def confirm():
                 else:
                         if payment_method == "TNG" and transaction_name is not None:
                             try:
-                             r.hset(token,mapping={"Email":email, "Payment_Method":payment_method, "Transaction_Name":transaction_name})
+                              r.hset(token, "Email", email)
+                              r.hset(token, "Payment_Method", payment_method)
+                              r.hset(token, "Transaction_Name", transaction_name)
+
                              order_json = json.dumps(r.hgetall(token),indent=4)
                              print(order_json)
                              sheet_customer.append_row([orderdata["customer"],order_json])
@@ -249,7 +253,10 @@ img {
     
     print("Running")
     orderdata["total"] = total
-    r.hset(token, mapping={k: str(v) for k, v in orderdata.items()})
+        
+    for k, v in orderdata.items():
+      r.hset(token, k, str(v))
+            
     print("TOTAL:", total)
     return render_template_string("""
     <!DOCTYPE html>
