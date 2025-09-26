@@ -151,7 +151,8 @@ def confirm():
     if not token or not r.exists(token):
         return jsonify({"error": "Invalid token"}), 401
     
-    orderdata = r.json.get(token)
+    orderdata = r.json.get(token, "$")
+    orderdata = orderdata[0]
 
     if request.method == "POST":
                 email = request.form.get("user_email")
