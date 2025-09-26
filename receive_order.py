@@ -435,7 +435,7 @@ img {
             <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg" id="qr_code">
           </div>
           <h4 class="input_form" id="title_transaction">Transaction name:</h4>
-          <input type="text" name="transaction_name" id="transaction_name_id" class="input_text" required>
+          <input type="text" name="transaction_name" id="transaction_name_id" class="input_text">
           <br>
           <h4 class="input_form">Your email:</h4>
           <input type="email" name="user_email" class="input_text" required>
@@ -462,10 +462,12 @@ function check_touch() {
 
   if (touch.checked) {
     transactionName.style.display = "block";
+    transactionName.required = true;
     transactionNametitle.style.display = "block";
     qrCode.style.display = "block";
   } else {
     transactionName.style.display = "none";
+    transactionName.required = false;
     transactionNametitle.style.display = "none";
     qrCode.style.display = "none";
   }
