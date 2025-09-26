@@ -134,7 +134,7 @@ def submit_order():
         return jsonify({"error": "Username required"}), 400
 
     # Save final order for this token
-    r.json().set(token, Path.root_path(), {"order": order_data, "customer": username})
+    r.json.set(token, Path.root_path(), {"order": order_data, "customer": username})
     """
     users_tokens[token]["order"] = order_data
     users_tokens[token]["customer"] = username
@@ -151,7 +151,7 @@ def confirm():
     if not token or not r.exists(token):
         return jsonify({"error": "Invalid token"}), 401
     
-    orderdata = r.json().get(token)
+    orderdata = r.json.get(token)
 
     if request.method == "POST":
                 email = request.form.get("user_email")
@@ -253,7 +253,7 @@ img {
     print("Running")
     orderdata["total"] = total
         
-    r.json().set(token, Path.root_path() + ".total", total)
+    r.json.set(token, Path.root_path() + ".total", total)
             
     print("TOTAL:", total)
     return render_template_string("""
