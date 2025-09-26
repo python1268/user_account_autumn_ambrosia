@@ -260,7 +260,7 @@ img {
             
     print("TOTAL:", total)
     return render_template_string("""
-    <!DOCTYPE html>
+       <!DOCTYPE html>
 <html>
   <head>
   <meta charset="UTF-8">
@@ -386,7 +386,8 @@ img {
 
       .input_text {
          border: 0.8px solid black;
-         width: 5em;
+         width: 15em;
+         height: 1.7em;
       }
     </style>
   </head>
@@ -433,10 +434,14 @@ img {
             <p>If you are paying on Touch N'Go please use the QR code below to proceed the payment and provide your transaction name after paid.</p>
             <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg" id="qr_code">
           </div>
-          <h4 class="input_form">Transaction name:</h4>
-          <input type="text" name="transaction_name" class="input_text" required>
+          <h4 class="input_form" id="title_transaction">Transaction name:</h4>
+          <input type="text" name="transaction_name" id="transaction_name_id" class="input_text" required>
+          <br>
           <h4 class="input_form">Your email:</h4>
           <input type="email" name="user_email" class="input_text" required>
+          <br>
+          <h4 class="input_form">Your class:</h4>
+          <input type="text" name="user_class" class="input_text" required>
          </fieldset>
         <button>Proceed</button>
         </form>
@@ -445,6 +450,27 @@ img {
         <ul id="down"></ul>
       </div>
   </body>
+  <script>
+ document.getElementById("payment_touch").addEventListener("change", check_touch);
+document.getElementById("payment_cash").addEventListener("change", check_touch);
+
+function check_touch() {
+  var touch = document.getElementById("payment_touch");
+  var transactionName = document.getElementById("transaction_name_id");
+  var transactionNametitle = document.getElementById("title_transaction");
+  var qrCode = document.getElementById("qr_code");
+
+  if (touch.checked) {
+    transactionName.style.display = "block";
+    transactionNametitle.style.display = "block";
+    qrCode.style.display = "block";
+  } else {
+    transactionName.style.display = "none";
+    transactionNametitle.style.display = "none";
+    qrCode.style.display = "none";
+  }
+}
+  </script>
 </html>
 """,total=str(orderdata["total"]),ordered=orderdata["order"])
 
