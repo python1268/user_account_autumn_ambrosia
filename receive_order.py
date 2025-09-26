@@ -245,6 +245,7 @@ img {
                            total_price += extra_topping_price
                            print(product_topping_list[name_index].split(", "))
                            print(total_price)
+                           thing.append(total_price)
                            total += total_price
                            print(f"Amount: {total}")
                          else:
