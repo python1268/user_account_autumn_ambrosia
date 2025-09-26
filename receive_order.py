@@ -1,8 +1,8 @@
-
 import secrets
 from flask import Flask, render_template_string, redirect, url_for, request,jsonify
 from flask_cors import CORS
 from flask_limiter import Limiter
+from flask_wtf import CSRFProtect
 from flask_limiter.util import get_remote_address
 import json
 import gspread
@@ -11,8 +11,7 @@ import datetime as d
 import time
 import os
 import threading
-
-
+from flask_wtf.csrf import generate_csrf
 from upstash_redis import Redis
 
 
@@ -100,9 +99,12 @@ for x,y,z in zip(name_list,topping_list,price_list):
     product_list.append([x,y,float(z)])
     print(product_list)
     
+app.secret_key = secrets.token_urlsafe(16)  # Required for CSRF token signing
 
+csrf = CSRFProtect(app)
 
 #First (Get token)
+@csrf.exempt
 @app.route("/token")
 def get_token():
     token = secrets.token_urlsafe(16)
@@ -116,6 +118,7 @@ def get_token():
     return jsonify({"token": token})
 
 #Token received. Then, frontend sends the order and store the data in memory dictionary 
+@csrf.exempt
 @app.route("/submit_order", methods=["POST"])
 def submit_order():
     token = request.args.get("token")
@@ -143,6 +146,7 @@ def submit_order():
     return jsonify({"message": "success"})
 
 #After receive success messages, then show the GET 
+@csrf.exempt
 @app.route("/confirm",methods=["GET","POST"])
 #@limiter.limit("4 per minute")
 #@limiter.limit("9 per hour")
@@ -257,6 +261,8 @@ img {
     r.json.set(token, "$" + ".total", total)
             
     print("TOTAL:", total)
+
+     csrf_token = generate_csrf()
     return render_template_string("""
        <!DOCTYPE html>
 <html>
@@ -421,6 +427,7 @@ img {
         <br>
         <br>
         <form method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
          <fieldset>
           <h2>Payment method</h2>
           <h4>Choose your payment method below</h4>
@@ -472,7 +479,7 @@ function check_touch() {
 }
   </script>
 </html>
-""",total=str(orderdata["total"]),ordered=orderdata["order"])
+""",total=str(orderdata["total"]),ordered=orderdata["order"], csrf_token=csrf_token)
 
         
 @app.route("/gspread_error")
