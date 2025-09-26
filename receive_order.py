@@ -175,9 +175,9 @@ def confirm():
                 else:
                         if payment_method == "TNG" and transaction_name is not None:
                             try:
-                              r.hset(token, "Email", email)
-                              r.hset(token, "Payment_Method", payment_method)
-                              r.hset(token, "Transaction_Name", transaction_name)
+                             r.hset(token, "Email", email)
+                             r.hset(token, "Payment_Method", payment_method)
+                             r.hset(token, "Transaction_Name", transaction_name)
 
                              order_json = json.dumps(r.hgetall(token),indent=4)
                              print(order_json)
