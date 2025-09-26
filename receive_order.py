@@ -106,7 +106,8 @@ CORS(app)
 @app.route("/token")
 def get_token():
     token = secrets.token_urlsafe(16)
-    r.set(token,"",ex=200)
+    r.hset(token, "initialized", "true")
+    r.expire(token, 200)
     print(token,flush=True)
     """
     users_tokens[token] = {}
