@@ -134,8 +134,7 @@ def submit_order():
         return jsonify({"error": "Username required"}), 400
 
     # Save final order for this token
-    r.hset(token, "order", json.dumps(order_data))
-    r.hset(token, "customer", username)
+    r.json().set(token, Path.root_path(), {"order": order_data, "customer": username})
     """
     users_tokens[token]["order"] = order_data
     users_tokens[token]["customer"] = username
@@ -152,9 +151,7 @@ def confirm():
     if not token or not r.exists(token):
         return jsonify({"error": "Invalid token"}), 401
     
-    orderdata = r.hgetall(token)
-    if "order" in orderdata:
-     orderdata["order"] = json.loads(orderdata["order"])
+    orderdata = r.json().get(token)
 
     if request.method == "POST":
                 email = request.form.get("user_email")
@@ -176,11 +173,11 @@ def confirm():
                 else:
                         if payment_method == "TNG" and transaction_name is not None:
                             try:
-                             r.hset(token, "Email", email)
-                             r.hset(token, "Payment_Method", payment_method)
-                             r.hset(token, "Transaction_Name", transaction_name)
+                             orderdata["Email"] = email
+                             orderdata["Payment_Method"] = payment_method
+                             orderdata["Transaction_Name"] = transaction_name
 
-                             order_json = json.dumps(r.hgetall(token),indent=4)
+                             order_json = json.dumps(orderdata,indent=4)
                              print(order_json)
                              sheet_customer.append_row([orderdata["customer"],order_json])
                             except Exception as e:
@@ -256,8 +253,7 @@ img {
     print("Running")
     orderdata["total"] = total
         
-    for k, v in orderdata.items():
-      r.hset(token, k, str(v))
+    r.json().set(token, Path.root_path() + ".total", total)
             
     print("TOTAL:", total)
     return render_template_string("""
