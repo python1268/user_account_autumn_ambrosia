@@ -2,8 +2,8 @@
 import secrets
 from flask import Flask, render_template_string, redirect, url_for, request,jsonify
 from flask_cors import CORS
-#from flask_limiter import Limiter
-#from flask_limiter.util import get_remote_address
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 import json
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
@@ -78,7 +78,7 @@ def schedule_data_load():
 threading.Thread(target=schedule_data_load, daemon=True).start()
 
 
-"""
+
 CORS(
     app,
     supports_credentials=True,
@@ -86,7 +86,7 @@ CORS(
     methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Content-Type", "Authorization"]
 )
-"""
+
 
 """
 limiter = Limiter(
@@ -100,7 +100,7 @@ for x,y,z in zip(name_list,topping_list,price_list):
     product_list.append([x,y,float(z)])
     print(product_list)
     
-CORS(app)
+
 
 #First (Get token)
 @app.route("/token")
