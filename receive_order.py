@@ -158,6 +158,10 @@ def confirm():
     orderdata = r.json.get(token, "$")
     orderdata = orderdata[0]
 
+    order_summary = "\n".join(
+        f"{item[1]} {item[0]} with {item[2]}" for item in orderdata["orderdata"]
+    )
+
     if request.method == "POST":
                 email = request.form.get("user_email")
                 transaction_name = request.form.get("transaction_name")
@@ -172,7 +176,7 @@ def confirm():
                            orderdata["Payment_Method"] = payment_method
                            order_json = json.dumps(orderdata,indent=4)
                            print(order_json)
-                           sheet_customer.append_row([orderdata["customer"],order_json])
+                           sheet_customer.append_row([orderdata["customer"],order_summary,email,"",payment_method,""])
                         except Exception as e:
                             return f"Error in confirm: {str(e)}"        
                 else:
@@ -184,7 +188,7 @@ def confirm():
 
                              order_json = json.dumps(orderdata,indent=4)
                              print(order_json)
-                             sheet_customer.append_row([orderdata["customer"],order_json])
+                             sheet_customer.append_row([orderdata["customer"],order_summary,email,"",payment_method,transaction_name])
                             except Exception as e:
                               return f"Error in confirm: {str(e)}"
                         else:
