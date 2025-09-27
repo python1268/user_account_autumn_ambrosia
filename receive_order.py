@@ -158,66 +158,10 @@ def confirm():
     orderdata = r.json.get(token, "$")
     orderdata = orderdata[0]
 
-    order_summary = "\n".join(
+    order_summary = "\n\n".join(
         f"{item[1]} {item[0]} with {item[2]}" for item in orderdata["order"]
     )
 
-    if request.method == "POST":
-                email = request.form.get("user_email")
-                transaction_name = request.form.get("transaction_name")
-                payment_method = request.form.get("payment_method")
-                if email is None:
-                        return "Please provide your email."
-                if payment_method is None:
-                        return "Please choose a payment method."
-                elif payment_method == "cash":
-                        try:
-                           orderdata["Email"] = email
-                           orderdata["Payment_Method"] = payment_method
-                           order_json = json.dumps(orderdata,indent=4)
-                           print(order_json)
-                           sheet_customer.append_row([orderdata["customer"],order_summary,email,"",payment_method,""])
-                        except Exception as e:
-                            return f"Error in confirm: {str(e)}"        
-                else:
-                        if payment_method == "TNG" and transaction_name is not None:
-                            try:
-                             orderdata["Email"] = email
-                             orderdata["Payment_Method"] = payment_method
-                             orderdata["Transaction_Name"] = transaction_name
-
-                             order_json = json.dumps(orderdata,indent=4)
-                             print(order_json)
-                             sheet_customer.append_row([orderdata["customer"],order_summary,email,"",payment_method,transaction_name])
-                            except Exception as e:
-                              return f"Error in confirm: {str(e)}"
-                        else:
-                            return "No transaction name given"
-                return render_template_string("""
- <!--Payment Successful-->
-<!DOCTYPE html>
-<html>
-  <body>
-    <picture>
-    <h1>Successful!</h1>
-      <source media="(max-width: 600px)" srcset="https://cdni.iconscout.com/illustration/premium/thumb/mobile-card-payment-successful-illustration-download-in-svg-png-gif-file-formats--through-by-smart-phone-cashless-trasaction-retail-shopping-pack-e-commerce-illustrations-4841252.png">
-     <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExcTZkb3I4ZXo4aDMxbWNxM3h6NG9zOGVvNHRvMWRrZWJvZjhtb3ppbCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/yeYaI0wAgWDKjZhHY5/giphy.gif">
-    </picture>
-    
-  </body>
-<style>
-img {
-      width: 100%;
-    }
-    h1 {
-      color: green;
-      display: block;
-        text-align: center;  
-    }
-  </style>
-</html>
-""")
-    
     total = 0
 
     for thing in orderdata["order"]:
@@ -261,10 +205,65 @@ img {
     
     print("Running")
     orderdata["total"] = total
-        
-    r.json.set(token, "$" + ".total", total)
             
     print("TOTAL:", total)
+
+
+    if request.method == "POST":
+                email = request.form.get("user_email")
+                transaction_name = request.form.get("transaction_name")
+                payment_method = request.form.get("payment_method")
+                if email is None:
+                        return "Please provide your email."
+                if payment_method is None:
+                        return "Please choose a payment method."
+                elif payment_method == "cash":
+                        try:
+                           orderdata["Email"] = email
+                           orderdata["Payment_Method"] = payment_method
+                           order_json = json.dumps(orderdata,indent=4)
+                           print(order_json)
+                           sheet_customer.append_row([orderdata["customer"],order_summary,email,"",payment_method,"",total])
+                        except Exception as e:
+                            return f"Error in confirm: {str(e)}"        
+                else:
+                        if payment_method == "TNG" and transaction_name is not None:
+                            try:
+                             orderdata["Email"] = email
+                             orderdata["Payment_Method"] = payment_method
+                             orderdata["Transaction_Name"] = transaction_name
+
+                             order_json = json.dumps(orderdata,indent=4)
+                             print(order_json)
+                             sheet_customer.append_row([orderdata["customer"],order_summary,email,"",payment_method,transaction_name,total])
+                            except Exception as e:
+                              return f"Error in confirm: {str(e)}"
+                        else:
+                            return "No transaction name given"
+                return render_template_string("""
+ <!--Payment Successful-->
+<!DOCTYPE html>
+<html>
+  <body>
+    <picture>
+    <h1>Successful!</h1>
+      <source media="(max-width: 600px)" srcset="https://cdni.iconscout.com/illustration/premium/thumb/mobile-card-payment-successful-illustration-download-in-svg-png-gif-file-formats--through-by-smart-phone-cashless-trasaction-retail-shopping-pack-e-commerce-illustrations-4841252.png">
+     <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExcTZkb3I4ZXo4aDMxbWNxM3h6NG9zOGVvNHRvMWRrZWJvZjhtb3ppbCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/yeYaI0wAgWDKjZhHY5/giphy.gif">
+    </picture>
+    
+  </body>
+<style>
+img {
+      width: 100%;
+    }
+    h1 {
+      color: green;
+      display: block;
+        text-align: center;  
+    }
+  </style>
+</html>
+""")
 
     csrf_token = generate_csrf()
     return render_template_string("""
@@ -415,7 +414,7 @@ img {
       <div id="order_submit">
         <ul id="up"></ul>
         <img id="image" src="https://img.freepik.com/free-vector/online-order-delivery-service-shipment-internet-shop-basket-cardboard-boxes-buyer-with-laptop-delivery-note-monitor-screen-parcel-vector-isolated-concept-metaphor-illustration_335657-2838.jpg">
-        <h3 id="order_title">Your order (Scroll to the right): </h3>
+        <h3 id="order_title">Your order (Scroll to the right to view more): </h3>
         <div id="template_ordered">
           {% for y in ordered %}
          <div class="ordered_items">
