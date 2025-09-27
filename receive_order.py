@@ -159,7 +159,7 @@ def confirm():
     orderdata = orderdata[0]
 
     order_summary = "\n".join(
-        f"{item[1]} {item[0]} with {item[2]}" for item in orderdata["orderdata"]
+        f"{item[1]} {item[0]} with {item[2]}" for item in orderdata["order"]
     )
 
     if request.method == "POST":
