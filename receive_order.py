@@ -262,7 +262,7 @@ img {
             
     print("TOTAL:", total)
 
-     csrf_token = generate_csrf()
+    csrf_token = generate_csrf()
     return render_template_string("""
        <!DOCTYPE html>
 <html>
