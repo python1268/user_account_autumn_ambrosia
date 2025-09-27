@@ -398,7 +398,7 @@ img {
   <body>
     <div id="nav">
       <ul id="top_bar">
-        <li class="top_lists" id="left">Company name</li>
+        <li class="top_lists" id="left">Autumn's Ambrosia</li>
         <img src="https://www.freepnglogos.com/uploads/company-logo-png/company-logo-transparent-png-19.png" id="logo">
         <li class="top_lists" id="right">Order Review</li>
       </ul>
