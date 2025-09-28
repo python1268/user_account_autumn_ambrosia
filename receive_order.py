@@ -3,7 +3,7 @@ from flask import Flask, render_template_string, redirect, url_for, request,json
 from flask_cors import CORS
 from flask_limiter import Limiter
 from flask_wtf import CSRFProtect
-from flask_limiter.util import get_remote_address
+from flask_limiter.util import get_ipaddr
 import json
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
@@ -87,12 +87,12 @@ CORS(
 )
 
 
-"""
 limiter = Limiter(
-    get_remote_address,
-    app=app
+    app,
+    key_func=get_ipaddr,
+    default_limits=["100 per hour"]
 )
-"""
+
 product_list = []
 
 for x,y,z in zip(name_list,topping_list,price_list):
@@ -149,7 +149,7 @@ def submit_order():
 @csrf.exempt
 @app.route("/confirm",methods=["GET","POST"])
 #@limiter.limit("4 per minute")
-#@limiter.limit("9 per hour")
+@limiter.limit("110 per hour")
 def confirm():
     token = request.args.get("token")
     if not token or not r.exists(token):
