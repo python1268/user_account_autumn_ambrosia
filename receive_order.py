@@ -3,7 +3,8 @@ from flask import Flask, render_template_string, redirect, url_for, request,json
 from flask_cors import CORS
 from flask_limiter import Limiter
 from flask_wtf import CSRFProtect
-from flask_limiter.util import get_ipaddr
+from flask_talisman import Talisman
+from flask import request
 import json
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
@@ -63,6 +64,14 @@ def load_data():
     print(topping_price)
 
 load_data()
+
+def get_ipaddr():
+    # If behind a proxy/load balancer, use the first IP in X-Forwarded-For
+    if "X-Forwarded-For" in request.headers:
+        # sometimes contains multiple IPs, take the first
+        return request.headers.get("X-Forwarded-For").split(",")[0].strip()
+    # fallback to remote_addr
+    return request.remote_addr
 
 app = Flask(__name__)
 
