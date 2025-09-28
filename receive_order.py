@@ -97,7 +97,7 @@ CORS(
 
 
 limiter = Limiter(
-    app,
+    app=app,
     key_func=get_ipaddr,
     default_limits=["100 per hour"]
 )
