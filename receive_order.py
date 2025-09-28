@@ -231,19 +231,20 @@ def confirm():
                 userclass = request.form.get("user_class")
                 transaction_name = request.form.get("transaction_name")
                 payment_method = request.form.get("payment_method")
+                phone_num = request.form.get("user_phone")
                 if email is None:
                         return "Please provide your email."
                 if payment_method is None:
                         return "Please choose a payment method."
                 if userclass is None:
                         return "Please provide details about the class."
+                if phone_num is None:
+                        phone_num = 'None'
                 elif payment_method == "cash":
                         try:
                            orderdata["Email"] = email
                            orderdata["Payment_Method"] = payment_method
-                           order_json = json.dumps(orderdata,indent=4)
-                           print(order_json)
-                           sheet_customer.append_row([orderdata["customer"],order_summary,email,userclass,payment_method,"",total])
+                           sheet_customer.append_row([orderdata["customer"],order_summary,email,userclass,payment_method,"",total,phone_num])
                         except Exception as e:
                             return f"Error in confirm: {str(e)}"        
                 else:
@@ -252,10 +253,7 @@ def confirm():
                              orderdata["Email"] = email
                              orderdata["Payment_Method"] = payment_method
                              orderdata["Transaction_Name"] = transaction_name
-
-                             order_json = json.dumps(orderdata,indent=4)
-                             print(order_json)
-                             sheet_customer.append_row([orderdata["customer"],order_summary,email,userclass,payment_method,transaction_name,total])
+                             sheet_customer.append_row([orderdata["customer"],order_summary,email,userclass,payment_method,transaction_name,total,phone_num])
                             except Exception as e:
                               return f"Error in confirm: {str(e)}"
                         else:
@@ -267,6 +265,7 @@ def confirm():
   <body>
     <picture>
     <h1>Successful!</h1>
+    <h3>You will receive our details via email.</h3>
       <source media="(max-width: 600px)" srcset="https://cdni.iconscout.com/illustration/premium/thumb/mobile-card-payment-successful-illustration-download-in-svg-png-gif-file-formats--through-by-smart-phone-cashless-trasaction-retail-shopping-pack-e-commerce-illustrations-4841252.png">
      <img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExcTZkb3I4ZXo4aDMxbWNxM3h6NG9zOGVvNHRvMWRrZWJvZjhtb3ppbCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/yeYaI0wAgWDKjZhHY5/giphy.gif">
     </picture>
@@ -279,7 +278,11 @@ img {
     h1 {
       color: green;
       display: block;
-        text-align: center;  
+      text-align: center;  
+    }
+    h3 {
+      display: block;
+      text-align: center; 
     }
   </style>
 </html>
@@ -462,7 +465,7 @@ img {
             <p>If you are paying on Touch N'Go please use the QR code below to proceed the payment and provide your transaction name after paid.</p>
             <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg" id="qr_code">
           </div>
-          <h4 class="input_form" id="title_transaction">Transaction name:</h4>
+          <h4 class="input_form" id="title_transaction">TNG transaction name (to identify your payment):</h4>
           <input type="text" name="transaction_name" id="transaction_name_id" class="input_text">
           <br>
           <h4 class="input_form">Your email:</h4>
@@ -470,6 +473,9 @@ img {
           <br>
           <h4 class="input_form">Your class:</h4>
           <input type="text" name="user_class" class="input_text" required>
+          <br>
+          <h4 class="input_form">Your phone number (optional):</h4>
+          <input type="text" name="user_phone" class="input_text">
          </fieldset>
         <button>Proceed</button>
         </form>
