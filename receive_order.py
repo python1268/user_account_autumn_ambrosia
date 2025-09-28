@@ -475,7 +475,7 @@ img {
           <input type="text" name="user_class" class="input_text" required>
           <br>
           <h4 class="input_form">Your phone number (optional):</h4>
-          <input type="text" name="user_phone" class="input_text">
+          <input type="tel" name="user_phone" pattern="\d{10}" class="input_text">
          </fieldset>
         <button>Proceed</button>
         </form>
