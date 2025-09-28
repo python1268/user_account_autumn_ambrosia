@@ -126,7 +126,7 @@ csrf = CSRFProtect(app)
 def get_token():
     token = secrets.token_urlsafe(16)
     r.json.set(token, "$", {"initialized": True})
-    r.expire(token, 200)
+    r.expire(token, 730)
     print(token,flush=True)
     """
     users_tokens[token] = {}
