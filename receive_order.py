@@ -110,6 +110,14 @@ for x,y,z in zip(name_list,topping_list,price_list):
     
 app.secret_key = secrets.token_urlsafe(16)  # Required for CSRF token signing
 
+app.config.update(
+    SESSION_COOKIE_SECURE=True,   # Only send cookies over HTTPS
+    SESSION_COOKIE_HTTPONLY=True, # Prevent JS access to cookies
+    SESSION_COOKIE_SAMESITE='Lax' # Prevent CSRF via cookies
+)
+
+Talisman(app, force_https=True)
+
 csrf = CSRFProtect(app)
 
 #First (Get token)
@@ -128,6 +136,7 @@ def get_token():
 
 #Token received. Then, frontend sends the order and store the data in memory dictionary 
 @csrf.exempt
+@limiter.limit("50 per hour")
 @app.route("/submit_order", methods=["POST"])
 def submit_order():
     token = request.args.get("token")
@@ -157,7 +166,6 @@ def submit_order():
 #After receive success messages, then show the GET 
 @csrf.exempt
 @app.route("/confirm",methods=["GET","POST"])
-#@limiter.limit("4 per minute")
 @limiter.limit("110 per hour")
 def confirm():
     token = request.args.get("token")
@@ -495,8 +503,7 @@ function check_touch() {
 
         
 @app.route("/gspread_error")
-#@limiter.limit("4 per minute")
-#@limiter.limit("9 per hour")
+@limiter.limit("50 per hour")
 def gspread_error():
     return "Error"
 
