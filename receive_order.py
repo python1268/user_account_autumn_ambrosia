@@ -449,7 +449,7 @@ img {
         <h3 id="total">Total amount: RM{{total}}</h3>
         <br>
         <br>
-        <form method="POST">
+        <form method="POST" onsubmit="alert('Processing...');">
         <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
          <fieldset>
           <h2>Payment method</h2>
