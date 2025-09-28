@@ -90,7 +90,7 @@ threading.Thread(target=schedule_data_load, daemon=True).start()
 CORS(
     app,
     supports_credentials=True,
-    origins=["https://index-autumn.onrender.com"],
+    origins=["https://index-autumn.onrender.com", "https://autumn-ambrosia.pages.dev"],
     methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Content-Type", "Authorization"]
 )
