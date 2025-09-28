@@ -228,19 +228,22 @@ def confirm():
 
     if request.method == "POST":
                 email = request.form.get("user_email")
+                userclass = request.form.get("user_class")
                 transaction_name = request.form.get("transaction_name")
                 payment_method = request.form.get("payment_method")
                 if email is None:
                         return "Please provide your email."
                 if payment_method is None:
                         return "Please choose a payment method."
+                if userclass is None:
+                        return "Please provide details about the class."
                 elif payment_method == "cash":
                         try:
                            orderdata["Email"] = email
                            orderdata["Payment_Method"] = payment_method
                            order_json = json.dumps(orderdata,indent=4)
                            print(order_json)
-                           sheet_customer.append_row([orderdata["customer"],order_summary,email,"",payment_method,"",total])
+                           sheet_customer.append_row([orderdata["customer"],order_summary,email,userclass,payment_method,"",total])
                         except Exception as e:
                             return f"Error in confirm: {str(e)}"        
                 else:
@@ -252,7 +255,7 @@ def confirm():
 
                              order_json = json.dumps(orderdata,indent=4)
                              print(order_json)
-                             sheet_customer.append_row([orderdata["customer"],order_summary,email,"",payment_method,transaction_name,total])
+                             sheet_customer.append_row([orderdata["customer"],order_summary,email,userclass,payment_method,transaction_name,total])
                             except Exception as e:
                               return f"Error in confirm: {str(e)}"
                         else:
