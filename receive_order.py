@@ -116,7 +116,6 @@ app.config.update(
     SESSION_COOKIE_SAMESITE='Lax' # Prevent CSRF via cookies
 )
 
-Talisman(app, force_https=True)
 
 csrf = CSRFProtect(app)
 
