@@ -95,6 +95,7 @@ CORS(
     allow_headers=["Content-Type", "Authorization"]
 )
 
+Talisman(app, content_security_policy=None, force_https=True)
 
 limiter = Limiter(
     app=app,
