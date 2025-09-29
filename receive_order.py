@@ -6,6 +6,7 @@ from flask_wtf import CSRFProtect
 from flask_talisman import Talisman
 from flask import request
 import json
+import requests as re
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import datetime as d
@@ -256,6 +257,8 @@ def confirm():
                            orderdata["Email"] = email
                            orderdata["Payment_Method"] = payment_method
                            sheet_customer.append_row([orderdata["customer"],order_summary,email,userclass,payment_method,"",total,phone_num])
+                           response = re.post("https://script.google.com/macros/s/AKfycbxqeU1Xxzb4ktlnu1BoSvjYk0O3uwnCAP3UVB4SH6kPX3BZMPWQFTMsXGnSadTavmuw/exec", json=orderdata["order"], headers={'Content-Type':'application/json'})
+                           print(response.status_code)
                         except Exception as e:
                             return f"Error in confirm: {str(e)}"        
                 else:
@@ -265,6 +268,8 @@ def confirm():
                              orderdata["Payment_Method"] = payment_method
                              orderdata["Transaction_Name"] = transaction_name
                              sheet_customer.append_row([orderdata["customer"],order_summary,email,userclass,payment_method,transaction_name,total,phone_num])
+                             response = re.post("https://script.google.com/macros/s/AKfycbxqeU1Xxzb4ktlnu1BoSvjYk0O3uwnCAP3UVB4SH6kPX3BZMPWQFTMsXGnSadTavmuw/exec", json=orderdata["order"], headers={'Content-Type':'application/json'})
+                             print(response.status_code)
                             except Exception as e:
                               return f"Error in confirm: {str(e)}"
                         else:
