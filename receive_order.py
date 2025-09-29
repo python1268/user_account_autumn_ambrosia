@@ -257,10 +257,10 @@ def confirm():
                            orderdata["Email"] = email
                            orderdata["Payment_Method"] = payment_method
                            sheet_customer.append_row([orderdata["customer"],order_summary,email,userclass,payment_method,"",total,phone_num])
-                           response = re.post("https://script.google.com/macros/s/AKfycbxqeU1Xxzb4ktlnu1BoSvjYk0O3uwnCAP3UVB4SH6kPX3BZMPWQFTMsXGnSadTavmuw/exec", json=orderdata["order"], headers={'Content-Type':'application/json'})
-                           print(response.status_code)
                         except Exception as e:
-                            return f"Error in confirm: {str(e)}"        
+                            return f"Error in confirm: {str(e)}" 
+                        response = re.post("https://script.google.com/macros/s/AKfycbxqeU1Xxzb4ktlnu1BoSvjYk0O3uwnCAP3UVB4SH6kPX3BZMPWQFTMsXGnSadTavmuw/exec", json=orderdata["order"], headers={'Content-Type':'application/json'})
+                        print(response.status_code)
                 else:
                         if payment_method == "TNG" and transaction_name is not None:
                             try:
@@ -268,10 +268,10 @@ def confirm():
                              orderdata["Payment_Method"] = payment_method
                              orderdata["Transaction_Name"] = transaction_name
                              sheet_customer.append_row([orderdata["customer"],order_summary,email,userclass,payment_method,transaction_name,total,phone_num])
-                             response = re.post("https://script.google.com/macros/s/AKfycbxqeU1Xxzb4ktlnu1BoSvjYk0O3uwnCAP3UVB4SH6kPX3BZMPWQFTMsXGnSadTavmuw/exec", json=orderdata["order"], headers={'Content-Type':'application/json'})
-                             print(response.status_code)
                             except Exception as e:
                               return f"Error in confirm: {str(e)}"
+                            response = re.post("https://script.google.com/macros/s/AKfycbxqeU1Xxzb4ktlnu1BoSvjYk0O3uwnCAP3UVB4SH6kPX3BZMPWQFTMsXGnSadTavmuw/exec", json=orderdata["order"], headers={'Content-Type':'application/json'})
+                            print(response.status_code)
                         else:
                             return "No transaction name given"
                 return render_template_string("""
