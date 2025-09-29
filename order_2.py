@@ -42,7 +42,8 @@ client = gspread.authorize(creds)
 
 
 # Open your Google Sheet by name
-sheet_customer = client.open('Customer Order').worksheet('cutomer_order_table_1')
+sheet_customer_cash = client.open('Customer Order').worksheet('table_cash')
+sheet_customer_tng = client.open('Customer Order').worksheet('table_tng')
 
 sheet_product = client.open('Official Product Database').worksheet('Products')  
 
@@ -248,7 +249,7 @@ def confirm():
                         try:
                            orderdata["Email"] = email
                            orderdata["Payment_Method"] = payment_method
-                           sheet_customer.append_row([orderdata["customer"],order_summary,email,userclass,payment_method,"",total,phone_num])
+                           sheet_customer_cash.append_row([orderdata["customer"],order_summary,email,userclass,phone_num,total])
                            email_data = {"order": orderdata["order"], "email": email}
                            response = re.post("https://script.google.com/macros/s/AKfycbxqeU1Xxzb4ktlnu1BoSvjYk0O3uwnCAP3UVB4SH6kPX3BZMPWQFTMsXGnSadTavmuw/exec", json=email_data, headers={'Content-Type':'application/json'})
                            print(response.status_code)
@@ -260,7 +261,7 @@ def confirm():
                              orderdata["Email"] = email
                              orderdata["Payment_Method"] = payment_method
                              orderdata["Transaction_Name"] = transaction_name
-                             sheet_customer.append_row([orderdata["customer"],order_summary,email,userclass,payment_method,transaction_name,total,phone_num])
+                             sheet_customer_tng.append_row([orderdata["customer"],order_summary,email,userclass,phone_num, transaction_name, total])
                              email_data = {"order": orderdata["order"], "email": email}
                              response = re.post("https://script.google.com/macros/s/AKfycbxqeU1Xxzb4ktlnu1BoSvjYk0O3uwnCAP3UVB4SH6kPX3BZMPWQFTMsXGnSadTavmuw/exec", json=email_data, headers={'Content-Type':'application/json'})
                              print(response.status_code)
