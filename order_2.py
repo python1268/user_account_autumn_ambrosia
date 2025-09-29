@@ -1,5 +1,5 @@
 import secrets
-from flask import Flask, render_template_string, redirect, url_for, request,jsonify
+from flask import Flask, render_template, redirect, url_for, request,jsonify
 from flask_cors import CORS
 from flask_limiter import Limiter
 from flask_wtf import CSRFProtect
