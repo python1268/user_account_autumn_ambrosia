@@ -46,6 +46,17 @@ sheet_product = client.open('Product').sheet1
 sheet_product_two = client.open('Product').worksheet('Sheet2')
 
 
+"""
+creds_json = os.environ.get("service-ambrosia-2")
+# Open your Google Sheet by name
+sheet_customer = client.open('Customer Order').worksheet('cutomer_order_table_1')
+
+sheet_product = client.open('Official Product Database').worksheet('Products')  
+
+sheet_product_two = client.open('Official Product Database').worksheet('Topping')
+
+"""
+
 
 def load_data():
     global name_list
