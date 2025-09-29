@@ -26,7 +26,8 @@ r = Redis(url="https://enormous-mastodon-11551.upstash.io", token="AS0fAAIncDJkY
 scope = ['https://spreadsheets.google.com/feeds',
         'https://www.googleapis.com/auth/drive']
 
-creds_json = os.environ.get("GOOGLE_CREDS_JSON")
+creds_json = os.environ.get("service-ambrosia-2")
+
 creds_dict = json.loads(creds_json)
 
 # Load your service account credentials JSON file
@@ -39,16 +40,7 @@ creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 client = gspread.authorize(creds)
 
 
-# Open your Google Sheet by name
-sheet_customer = client.open('Customer_order').sheet1
 
-sheet_product = client.open('Product').sheet1  
-
-sheet_product_two = client.open('Product').worksheet('Sheet2')
-
-
-"""
-creds_json = os.environ.get("service-ambrosia-2")
 # Open your Google Sheet by name
 sheet_customer = client.open('Customer Order').worksheet('cutomer_order_table_1')
 
@@ -56,7 +48,7 @@ sheet_product = client.open('Official Product Database').worksheet('Products')
 
 sheet_product_two = client.open('Official Product Database').worksheet('Topping')
 
-"""
+
 
 
 def load_data():
