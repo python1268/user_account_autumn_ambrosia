@@ -1,4 +1,5 @@
 import secrets
+from markupsafe import escape
 from flask import Flask, render_template, redirect, url_for, request,jsonify
 from flask_cors import CORS
 from flask_limiter import Limiter
@@ -12,7 +13,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 import datetime as d
 import time
 import os
-import threading
+import random
 from flask_wtf.csrf import generate_csrf
 from upstash_redis import Redis
 
@@ -27,23 +28,26 @@ scope = ['https://spreadsheets.google.com/feeds',
         'https://www.googleapis.com/auth/drive']
 
 creds_json = os.environ.get("service-ambrosia-2")
-
 creds_dict = json.loads(creds_json)
-
-# Load your service account credentials JSON file
-# Load your service account credentials JSON file
-
 creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
-
-
 # Authorize the client
 client = gspread.authorize(creds)
 
+creds_json2 = os.environ.get("service-ambrosia-4")
+creds_dict2 = json.loads(creds_json2)
+creds2 = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+# Authorize the client
+client2 = gspread.authorize(creds)
 
+service_accounts = ["client", "client2"]
 
 # Open your Google Sheet by name
 sheet_customer_cash = client.open('Customer Order').worksheet('table_cash')
 sheet_customer_tng = client.open('Customer Order').worksheet('table_tng')
+
+
+sheet_customer_cash2 = client2.open('Customer Order').worksheet('table_cash')
+sheet_customer_tng2 = client2.open('Customer Order').worksheet('table_tng')
 
 sheet_product = client.open('Official Product Database').worksheet('Products')  
 
@@ -85,17 +89,17 @@ def schedule_data_load():
         load_data()
         time.sleep(60 * 60 * 12)
 
-
-
-# Start background thread
-threading.Thread(target=schedule_data_load, daemon=True).start()
+def sanitize_for_sheet(value):
+    if isinstance(value, str) and value and value[0] in ('=', '+', '-', '@'):
+        return "'" + value
+    return value
 
 
 
 CORS(
     app,
     supports_credentials=True,
-    origins=["https://index-autumn.onrender.com", "https://autumns-ambrosia-store.pages.dev"],
+    origins=["https://index-autumn.onrender.com", "https://autumns-ambrosia-store.pages.dev","https://autumns-ambrosia-preorder.pages.dev"],
     methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Content-Type", "Authorization"]
 )
@@ -105,7 +109,7 @@ Talisman(app, content_security_policy=None, force_https=True)
 limiter = Limiter(
     app=app,
     key_func=get_ipaddr,
-    default_limits=["100 per hour"]
+    default_limits=["70 per hour"]
 )
 
 product_list = []
@@ -194,7 +198,7 @@ def confirm():
 
                  if thing[0] not in name_list:
                      print(f"name")
-                     return f"<h4>We do not have {thing[0]} in our menu</h4>"
+                     return f"<h4>We do not have {escape(thing[0])} in our menu</h4>"
                  else:
                      name_index = name_list.index(thing[0])
                  
@@ -223,7 +227,7 @@ def confirm():
                          else:
                                 print("Failed")
                  else:
-                        return f"<h4>We do not have {thing[2]} in our topping menu</h4>"
+                        return f"<h4>We do not have {escape(thing[2])} in our topping menu</h4>"
     
     print("Running")
     orderdata["total"] = total
@@ -240,16 +244,18 @@ def confirm():
                 if email is None:
                         return "Please provide your email."
                 if payment_method is None:
-                        return "Please choose a payment method."
+                        return "<h4>Please choose a payment method.</h4>"
                 if userclass is None:
                         return "Please provide details about the class."
                 if phone_num is None:
                         phone_num = 'None'
                 elif payment_method == "cash":
                         try:
-                           orderdata["Email"] = email
-                           orderdata["Payment_Method"] = payment_method
-                           sheet_customer_cash.append_row([orderdata["customer"],order_summary,email,userclass,phone_num,total])
+                           if random.choice(service_accounts) == service_accounts[0]: 
+                             sheet_customer_cash.append_row([sanitize_for_sheet(orderdata["customer"]),sanitize_for_sheet(order_summary),sanitize_for_sheet(email),sanitize_for_sheet(userclass),sanitize_for_sheet(phone_num),total])
+                           else:
+                             sheet_customer_cash2.append_row([sanitize_for_sheet(orderdata["customer"]),sanitize_for_sheet(order_summary),sanitize_for_sheet(email),sanitize_for_sheet(userclass),sanitize_for_sheet(phone_num),total])
+
                            email_data = {"order": orderdata["order"], "email": email}
                            response = re.post("https://script.google.com/macros/s/AKfycbxqeU1Xxzb4ktlnu1BoSvjYk0O3uwnCAP3UVB4SH6kPX3BZMPWQFTMsXGnSadTavmuw/exec", json=email_data, headers={'Content-Type':'application/json'})
                            print(response.status_code)
@@ -258,10 +264,11 @@ def confirm():
                 else:
                         if payment_method == "TNG" and transaction_name is not None:
                             try:
-                             orderdata["Email"] = email
-                             orderdata["Payment_Method"] = payment_method
-                             orderdata["Transaction_Name"] = transaction_name
-                             sheet_customer_tng.append_row([orderdata["customer"],order_summary,email,userclass,phone_num, transaction_name, total])
+                             if random.choice(service_accounts) == service_accounts[0]:
+                                  sheet_customer_tng.append_row([sanitize_for_sheet(orderdata["customer"]),sanitize_for_sheet(order_summary),sanitize_for_sheet(email),sanitize_for_sheet(userclass),sanitize_for_sheet(phone_num), sanitize_for_sheet(transaction_name), total])
+                             else: 
+                                   sheet2_customer_tng.append_row([sanitize_for_sheet(orderdata["customer"]),sanitize_for_sheet(order_summary),sanitize_for_sheet(email),sanitize_for_sheet(userclass),sanitize_for_sheet(phone_num), sanitize_for_sheet(transaction_name), total])
+                                     
                              email_data = {"order": orderdata["order"], "email": email}
                              response = re.post("https://script.google.com/macros/s/AKfycbxqeU1Xxzb4ktlnu1BoSvjYk0O3uwnCAP3UVB4SH6kPX3BZMPWQFTMsXGnSadTavmuw/exec", json=email_data, headers={'Content-Type':'application/json'})
                              print(response.status_code)
