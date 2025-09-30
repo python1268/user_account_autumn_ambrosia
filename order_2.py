@@ -194,13 +194,13 @@ def confirm():
 
                  if thing[0] not in name_list:
                      print(f"name")
-                     return f"We do not have {thing[0]} in our menu"
+                     return f"<h4>We do not have {thing[0]} in our menu</h4>"
                  else:
                      name_index = name_list.index(thing[0])
                  
                  if thing[1] > 40:
                      print(thing[1])
-                     return f"Too many"
+                     return f"<h4>Too many</h4>"
                  
                  print("Run")
 
@@ -223,7 +223,7 @@ def confirm():
                          else:
                                 print("Failed")
                  else:
-                        return f"We do not have {thing[2]} in our topping menu"
+                        return f"<h4>We do not have {thing[2]} in our topping menu</h4>"
     
     print("Running")
     orderdata["total"] = total
