@@ -7,7 +7,7 @@ from flask_wtf import CSRFProtect
 from flask_talisman import Talisman
 from flask import request
 import json
-import requests as re
+import requests as req
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import datetime as d
@@ -95,9 +95,14 @@ def sanitize_for_sheet(value):
         
 
 def check_phone(phone_num):
-    if not phone_num or not re.fullmatch(r"\d{10}", phone_num):
-        return "<h4>The phone number must be exactly 10 digits.</h4>"
-    return None
+    if phone_num is None:
+            phone_num = 'None'
+            return None
+    elif not re.match(r"\d{10}", phone_num):
+            return "<h4>The phone number must be exactly 10 digits.</h4>"
+    else: 
+            return None
+
 
 def check_class(userclass):
         if userclass in list_class:
@@ -291,7 +296,7 @@ def confirm():
                              sheet_customer_cash2.append_row([sanitize_for_sheet(orderdata["customer"]),sanitize_for_sheet(order_summary),sanitize_for_sheet(email),sanitize_for_sheet(userclass),sanitize_for_sheet(phone_num),total])
 
                            email_data = {"order": orderdata["order"], "email": email}
-                           response = re.post("https://script.google.com/macros/s/AKfycbxqeU1Xxzb4ktlnu1BoSvjYk0O3uwnCAP3UVB4SH6kPX3BZMPWQFTMsXGnSadTavmuw/exec", json=email_data, headers={'Content-Type':'application/json'})
+                           response = req.post("https://script.google.com/macros/s/AKfycbxqeU1Xxzb4ktlnu1BoSvjYk0O3uwnCAP3UVB4SH6kPX3BZMPWQFTMsXGnSadTavmuw/exec", json=email_data, headers={'Content-Type':'application/json'})
                            print(response.status_code)
                            r.delete(token)
                         except Exception as e:
@@ -305,7 +310,7 @@ def confirm():
                                    sheet_customer_tng2.append_row([sanitize_for_sheet(orderdata["customer"]),sanitize_for_sheet(order_summary),sanitize_for_sheet(email),sanitize_for_sheet(userclass),sanitize_for_sheet(phone_num), sanitize_for_sheet(transaction_name), total])
                                      
                              email_data = {"order": orderdata["order"], "email": email}
-                             response = re.post("https://script.google.com/macros/s/AKfycbxqeU1Xxzb4ktlnu1BoSvjYk0O3uwnCAP3UVB4SH6kPX3BZMPWQFTMsXGnSadTavmuw/exec", json=email_data, headers={'Content-Type':'application/json'})
+                             response = req.post("https://script.google.com/macros/s/AKfycbxqeU1Xxzb4ktlnu1BoSvjYk0O3uwnCAP3UVB4SH6kPX3BZMPWQFTMsXGnSadTavmuw/exec", json=email_data, headers={'Content-Type':'application/json'})
                              print(response.status_code)
                              r.delete(token)
                             except Exception as e:
