@@ -37,7 +37,7 @@ creds_json2 = os.environ.get("service-ambrosia-4")
 creds_dict2 = json.loads(creds_json2)
 creds2 = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
 # Authorize the client
-client2 = gspread.authorize(creds)
+client2 = gspread.authorize(creds2)
 
 service_accounts = ["client", "client2"]
 
