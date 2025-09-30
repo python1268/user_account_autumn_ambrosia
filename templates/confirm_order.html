@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
+   <style>
       #top_bar {
         margin: 0;
         width: 100%;
@@ -128,92 +128,161 @@
          height: 1.7em;
       }
     </style>
-  </head>
-  <body>
-    <div id="nav">
-      <ul id="top_bar">
-        <li class="top_lists" id="left">Autumn's Ambrosia</li>
-        <img src="https://www.freepnglogos.com/uploads/company-logo-png/company-logo-transparent-png-19.png" id="logo">
-        <li class="top_lists" id="right">Order Review</li>
-      </ul>
-    </div>
-    
-      <h2>Thank you for purchasing our products.</h2>
-      <h4>We would like to confirm the order and payment method.</h4>
+</head>
+<body>
+  <div id="nav">
+    <ul id="top_bar">
+      <li class="top_lists" id="left">Autumn's Ambrosia</li>
+      <img src="https://www.freepnglogos.com/uploads/company-logo-png/company-logo-transparent-png-19.png" id="logo">
+      <li class="top_lists" id="right">Order Review</li>
+    </ul>
+  </div>
 
-      
-      <div id="order_submit">
-        <ul id="up"></ul>
-        <img id="image" src="https://img.freepik.com/free-vector/online-order-delivery-service-shipment-internet-shop-basket-cardboard-boxes-buyer-with-laptop-delivery-note-monitor-screen-parcel-vector-isolated-concept-metaphor-illustration_335657-2838.jpg">
-        <h3 id="order_title">Your order (Scroll to the right to view more): </h3>
-        <div id="template_ordered">
-          {% for y in ordered %}
-         <div class="ordered_items">
-           <h4 class="ordered_label">Item Name: {{y[0] | e}}</h4>
-           <h4 class="ordered_label">Quantity: {{y[1] | e}}</h4>
-           <h4 class="ordered_label">Topping chosen: {{y[2] | e}}</h4>
-           <h4 class="ordered_label">Total price: RM{{y[3] | e}}</h4>
-         </div>
-          {% endfor %}
-        </div>
-        <br>
-        <h3 id="total">Total amount: RM{{total | e}}</h3>
-        <br>
-        <br>
-        <form method="POST" onsubmit="alert('Processing...');">
-        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-         <fieldset>
-          <h2>Payment method</h2>
-          <h4>Choose your payment method below</h4>
-          <input type="radio" name="payment_method" id="payment_cash" value="cash">
-          <label for="">Pay on cash</label><br>
-          <input type="radio" name="payment_method" id="payment_touch" value="TNG">
-          <label for="">Pay on Touch N'Go</label>
-          <div>
-            <p>If you are paying on Touch N'Go please use the QR code below to proceed the payment and provide your transaction name after paid.</p>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg" id="qr_code">
-          </div>
-          <h4 class="input_form" id="title_transaction">TNG transaction name (to identify your payment):</h4>
-          <input type="text" name="transaction_name" id="transaction_name_id" class="input_text">
-          <br>
-          <h4 class="input_form">Your email:</h4>
-          <input type="email" name="user_email" class="input_text" required>
-          <br>
-          <h4 class="input_form">Your class:</h4>
-          <input type="text" name="user_class" class="input_text" required>
-          <br>
-          <h4 class="input_form">Your phone number (optional):</h4>
-          <input type="tel" name="user_phone" pattern="[0-9]{10}" class="input_text">
-           <p>Note: Phone number must be in this format (example: 0101234567).</p>
-         </fieldset>
-        <button>Proceed</button>
-        </form>
-        <br>
-        <br>
-        <ul id="down"></ul>
+  <h2>Thank you for purchasing our products.</h2>
+  <h4>We would like to confirm the order and payment method.</h4>
+
+  <div id="order_submit">
+    <ul id="up"></ul>
+    <img id="image" src="https://img.freepik.com/free-vector/online-order-delivery-service-shipment-internet-shop-basket-cardboard-boxes-buyer-with-laptop-delivery-note-monitor-screen-parcel-vector-isolated-concept-metaphor-illustration_335657-2838.jpg">
+    <h3 id="order_title">Your order (Scroll to the right to view more): </h3>
+
+    <div id="template_ordered">
+      {% for y in ordered %}
+      <div class="ordered_items">
+        <h4 class="ordered_label">Item Name: {{y[0] | e}}</h4>
+        <h4 class="ordered_label">Quantity: {{y[1] | e}}</h4>
+        <h4 class="ordered_label">Topping chosen: {{y[2] | e}}</h4>
+        <h4 class="ordered_label">Total price: RM{{y[3] | e}}</h4>
       </div>
-  </body>
+      {% endfor %}
+    </div>
+
+    <h3 id="total">Total amount: RM{{total | e}}</h3>
+
+    <form method="POST">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <fieldset>
+        <h2>Payment method</h2>
+        <h4>Choose your payment method below</h4>
+        <input type="radio" name="payment_method" id="payment_cash" value="cash">
+        <label for="payment_cash">Pay on cash</label><br>
+        <input type="radio" name="payment_method" id="payment_touch" value="TNG">
+        <label for="payment_touch">Pay on Touch N'Go</label>
+        <div>
+          <p>If you are paying on Touch N'Go please use the QR code below to proceed the payment and provide your transaction name after paid.</p>
+          <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg" id="qr_code">
+        </div>
+        <h4 class="input_form" id="title_transaction">TNG transaction name (to identify your payment):</h4>
+        <input type="text" name="transaction_name" id="transaction_name_id" class="input_text">
+
+        <h4 class="input_form">Your email:</h4>
+        <input id="email_input" type="email" name="user_email" class="input_text" required>
+
+        <h4 class="input_form">Your class:</h4>
+        <input type="text" name="user_class" class="input_text" required>
+
+        <h4 class="input_form">Your phone number (optional):</h4>
+        <input type="tel" name="user_phone" pattern="[0-9]{10}" class="input_text">
+        <p>Note: Phone number must be in this format (example: 0101234567).</p>
+      </fieldset>
+      <button id="submit_button" type="submit">Proceed</button>
+    </form>
+    <ul id="down"></ul>
+  </div>
+
   <script>
- document.getElementById("payment_touch").addEventListener("change", check_touch);
-document.getElementById("payment_cash").addEventListener("change", check_touch);
+    let enter = true;
 
-function check_touch() {
-  var touch = document.getElementById("payment_touch");
-  var transactionName = document.getElementById("transaction_name_id");
-  var transactionNametitle = document.getElementById("title_transaction");
-  var qrCode = document.getElementById("qr_code");
+    document.addEventListener("DOMContentLoaded", function () {
+      // Default hide TNG inputs
+      check_touch();
 
-  if (touch.checked) {
-    transactionName.style.display = "block";
-    transactionName.required = true;
-    transactionNametitle.style.display = "block";
-    qrCode.style.display = "block";
-  } else {
-    transactionName.style.display = "none";
-    transactionName.required = false;
-    transactionNametitle.style.display = "none";
-    qrCode.style.display = "none";
-  }
-}
+      // Add radio change listener
+      document.getElementById("payment_touch").addEventListener("change", check_touch);
+      document.getElementById("payment_cash").addEventListener("change", check_touch);
+
+      // Form submit listener
+      const form = document.querySelector("form");
+      const submit_button = document.getElementById("submit_button");
+
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        if (!enter) return;
+
+        const valid = validateForm();
+        if (!valid) {
+          return;
+        }
+
+        alert("Processing...");
+        submit_button.disabled = true;
+        enter = false;
+
+        setTimeout(() => {
+          submit_button.disabled = false;
+          enter = true;
+          form.submit(); // submit the form if validation passed
+        }, 1000);
+      });
+    });
+
+    function check_touch() {
+      const touch = document.getElementById("payment_touch");
+      const transactionName = document.getElementById("transaction_name_id");
+      const transactionNametitle = document.getElementById("title_transaction");
+      const qrCode = document.getElementById("qr_code");
+
+      const show = touch.checked;
+      transactionName.style.display = show ? "block" : "none";
+      transactionName.required = show;
+      transactionNametitle.style.display = show ? "block" : "none";
+      qrCode.style.display = show ? "block" : "none";
+    }
+
+    function checkEmail() {
+      const email = document.getElementById("email_input").value.trim();
+      const pattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+      if (email.length < 5) {
+        alert("Email is too short. Minimum length is 5 characters.");
+        return false;
+      }
+
+      if (email.length > 254) {
+        alert("Email is too long. Maximum length is 254 characters.");
+        return false;
+      }
+
+      if (!pattern.test(email)) {
+        alert("The provided email doesn't meet the correct format.");
+        return false;
+      }
+
+      return true;
+    }
+
+    function checkClass() {
+      const allowed_classes = ['other classes', 'not in this school', 'primary',
+        '7P', '7U', '7C', '7H', '7O', '7N', '7G',
+        '8P', '8U', '8C', '8H', '8O', '8N', '8G',
+        '9P', '9U', '9C', '9H', '9O', '9N', '9G',
+        '10P', '10U', '10C', '10H', '10O', '10N', '10G',
+        '11P', '11U', '11C', '11H', '11O', '11N', '11G'];
+
+      const user_class = document.querySelector('[name="user_class"]').value.trim();
+
+      if (!allowed_classes.includes(user_class)) {
+        alert("Class input must match a valid class (e.g., '7P', '10O', 'primary', etc.)");
+        return false;
+      }
+
+      return true;
+    }
+
+    function validateForm() {
+      return checkEmail() && checkClass();
+    }
   </script>
+</body>
 </html>
