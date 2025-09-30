@@ -149,15 +149,15 @@
         <div id="template_ordered">
           {% for y in ordered %}
          <div class="ordered_items">
-           <h4 class="ordered_label">Item Name: {{y[0]}}</h4>
-           <h4 class="ordered_label">Quantity: {{y[1]}}</h4>
-           <h4 class="ordered_label">Topping chosen: {{y[2]}}</h4>
-           <h4 class="ordered_label">Total price: RM{{y[3]}}</h4>
+           <h4 class="ordered_label">Item Name: {{y[0] | e}}</h4>
+           <h4 class="ordered_label">Quantity: {{y[1] | e}}</h4>
+           <h4 class="ordered_label">Topping chosen: {{y[2] | e}}</h4>
+           <h4 class="ordered_label">Total price: RM{{y[3] | e}}</h4>
          </div>
           {% endfor %}
         </div>
         <br>
-        <h3 id="total">Total amount: RM{{total}}</h3>
+        <h3 id="total">Total amount: RM{{total | e}}</h3>
         <br>
         <br>
         <form method="POST" onsubmit="alert('Processing...');">
@@ -183,7 +183,8 @@
           <input type="text" name="user_class" class="input_text" required>
           <br>
           <h4 class="input_form">Your phone number (optional):</h4>
-          <input type="tel" name="user_phone" pattern="\d{10}" class="input_text">
+          <input type="tel" name="user_phone" pattern="[0-9]{10}" class="input_text">
+           <p>Note: Phone number must be in this format (example: 0101234567).</p>
          </fieldset>
         <button>Proceed</button>
         </form>
