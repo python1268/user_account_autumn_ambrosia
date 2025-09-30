@@ -14,6 +14,7 @@ import datetime as d
 import time
 import os
 import random
+import re
 from flask_wtf.csrf import generate_csrf
 from upstash_redis import Redis
 
@@ -35,7 +36,7 @@ client = gspread.authorize(creds)
 
 creds_json2 = os.environ.get("service-ambrosia-4")
 creds_dict2 = json.loads(creds_json2)
-creds2 = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
+creds2 = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict2, scope)
 # Authorize the client
 client2 = gspread.authorize(creds2)
 
@@ -53,8 +54,9 @@ sheet_product = client.open('Official Product Database').worksheet('Products')
 
 sheet_product_two = client.open('Official Product Database').worksheet('Topping')
 
+lock = threading.Lock()
 
-
+pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
 
 def load_data():
     global name_list
@@ -74,6 +76,8 @@ def load_data():
 
 load_data()
 
+list_class = ['other', 'not in this school', 'primary', '7P', '7U', '7C', '7H', '7O', '7N', '7G', '8P', '8U', '8C', '8H', '8O', '8N', '8G', '9P', '9U', '9C', '9H', '9O', '9N', '9G', '10P', '10U', '10C', '10H', '10O', '10N', '10G', '11P', '11U', '11C', '11H', '11O', '11N', '11G']
+
 def get_ipaddr():
     # If behind a proxy/load balancer, use the first IP in X-Forwarded-For
     if "X-Forwarded-For" in request.headers:
@@ -84,17 +88,44 @@ def get_ipaddr():
 
 app = Flask(__name__)
 
-def schedule_data_load():
-    while True:
-        load_data()
-        time.sleep(60 * 60 * 12)
-
 def sanitize_for_sheet(value):
     if isinstance(value, str) and value and value[0] in ('=', '+', '-', '@'):
         return "'" + value
     return value
+        
 
+def check_phone(phone_num):
+    if not phone_num or not re.fullmatch(r"\d{10}", phone_num):
+        return "<h4>The phone number must be exactly 10 digits.</h4>"
+    return None
 
+def check_class(userclass):
+        if userclass in list_class:
+           return None
+        elif userclass is None:
+           return "Please provide details about the class."
+        else:
+           return "<h3>For the class input you can only type these values to it.</h3><br><p>'other', 'not in this school', 'primary', '7P', '7U', '7C', '7H', '7O', '7N', '7G', '8P', '8U', '8C', '8H', '8O', '8N', '8G', '9P', '9U', '9C', '9H', '9O', '9N', '9G', '10P', '10U', '10C', '10H', '10O', '10N', '10G', '11P', '11U', '11C', '11H', '11O', '11N', '11G'</p>"
+
+def check_email(email):
+    pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+    min_length = 5
+    max_length = 254
+
+    if email is None or email.strip() == "":
+        return "<h3>Please provide your email.</h3>"
+    
+    email = email.strip()  # remove leading/trailing spaces
+        
+    if len(email) < min_length:
+        return f"<h3>Email is too short. Minimum length is {min_length} characters.</h3>"
+    
+    if len(email) > max_length:
+        return f"<h3>Email is too long. Maximum length is {max_length} characters.</h3>"
+    
+    if not re.match(pattern, email):
+        return "<h3>The provided email doesn't meet the correct format</h3>"
+    
 
 CORS(
     app,
@@ -109,7 +140,7 @@ Talisman(app, content_security_policy=None, force_https=True)
 limiter = Limiter(
     app=app,
     key_func=get_ipaddr,
-    default_limits=["70 per hour"]
+    default_limits=["100 per hour"]
 )
 
 product_list = []
@@ -241,14 +272,17 @@ def confirm():
                 transaction_name = request.form.get("transaction_name")
                 payment_method = request.form.get("payment_method")
                 phone_num = request.form.get("user_phone")
-                if email is None:
-                        return "Please provide your email."
+            
+                error_email = check_email(email)
+                error_class = check_class(userclass)
+                error_phone = check_phone(phone_num)
+
+                if error_email or error_class or error_phone:
+                      return f"{error_email or ''}<br>{error_class or ''}<br>{error_phone or ''}"
+            
                 if payment_method is None:
                         return "<h4>Please choose a payment method.</h4>"
-                if userclass is None:
-                        return "Please provide details about the class."
-                if phone_num is None:
-                        phone_num = 'None'
+                        
                 elif payment_method == "cash":
                         try:
                            if random.choice(service_accounts) == service_accounts[0]: 
@@ -259,6 +293,7 @@ def confirm():
                            email_data = {"order": orderdata["order"], "email": email}
                            response = re.post("https://script.google.com/macros/s/AKfycbxqeU1Xxzb4ktlnu1BoSvjYk0O3uwnCAP3UVB4SH6kPX3BZMPWQFTMsXGnSadTavmuw/exec", json=email_data, headers={'Content-Type':'application/json'})
                            print(response.status_code)
+                           r.delete(token)
                         except Exception as e:
                             return f"Error in confirm: {str(e)}" 
                 else:
@@ -267,11 +302,12 @@ def confirm():
                              if random.choice(service_accounts) == service_accounts[0]:
                                   sheet_customer_tng.append_row([sanitize_for_sheet(orderdata["customer"]),sanitize_for_sheet(order_summary),sanitize_for_sheet(email),sanitize_for_sheet(userclass),sanitize_for_sheet(phone_num), sanitize_for_sheet(transaction_name), total])
                              else: 
-                                   sheet2_customer_tng.append_row([sanitize_for_sheet(orderdata["customer"]),sanitize_for_sheet(order_summary),sanitize_for_sheet(email),sanitize_for_sheet(userclass),sanitize_for_sheet(phone_num), sanitize_for_sheet(transaction_name), total])
+                                   sheet_customer_tng2.append_row([sanitize_for_sheet(orderdata["customer"]),sanitize_for_sheet(order_summary),sanitize_for_sheet(email),sanitize_for_sheet(userclass),sanitize_for_sheet(phone_num), sanitize_for_sheet(transaction_name), total])
                                      
                              email_data = {"order": orderdata["order"], "email": email}
                              response = re.post("https://script.google.com/macros/s/AKfycbxqeU1Xxzb4ktlnu1BoSvjYk0O3uwnCAP3UVB4SH6kPX3BZMPWQFTMsXGnSadTavmuw/exec", json=email_data, headers={'Content-Type':'application/json'})
                              print(response.status_code)
+                             r.delete(token)
                             except Exception as e:
                               return f"Error in confirm: {str(e)}"
                         else:
@@ -291,5 +327,13 @@ def gspread_error():
 def wake_up():
    return "w"
 
+@app.route("/reload", methods=["GET"])
+def reload():
+ try:
+   load_data()
+   return "Success"
+ except:
+   return "Failed"
+ 
 if __name__ == '__main__':
     app.run(debug=False, host="0.0.0.0")
