@@ -165,12 +165,17 @@
         <h2>Payment method</h2>
         <h4>Choose your payment method below</h4>
         <input type="radio" name="payment_method" id="payment_cash" value="cash">
-        <label for="payment_cash">Pay on cash</label><br>
+        <label for="payment_cash">Pay on cash (Pay on 15 October at our booth)</label><br>
+        <br>
         <input type="radio" name="payment_method" id="payment_touch" value="TNG">
         <label for="payment_touch">Pay on Touch N'Go</label>
         <div>
+          <br>
           <p>If you are paying on Touch N'Go please use the QR code below to proceed the payment and provide your transaction name after paid.</p>
-          <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/QR_code_for_mobile_English_Wikipedia.svg" id="qr_code">
+          <img src="https://ik.imagekit.io/ambrosia/IMG_0801.jpeg?updatedAt=1759323451518" onerror="this.onerror=null; this.src='https://i.ibb.co/J6KmPYw/IMG-0801.jpg';" id="qr_code">
+          <br>
+          <a id="link_qr" href="https://ik.imagekit.io/mtezxb4dx/IMG_0801.jpeg?updatedAt=1759329285065" target="blank">Link to full image just in case the QR code above fails</a>
+          <p id="paid">If you have already paid using this QR code for your ordered items, then you do not need to pay again as we will check our transaction history and inform you whether you have paid or not.</p>
         </div>
         <h4 class="input_form" id="title_transaction">TNG transaction name (to identify your payment):</h4>
         <input type="text" name="transaction_name" id="transaction_name_id" class="input_text">
@@ -180,8 +185,10 @@
 
         <h4 class="input_form">Your class:</h4>
         <input type="text" name="user_class" class="input_text" required>
-        <p>If you are in primary just put primary. If you are not from Taylor Puchong please put "not in this school". If you do not see your own class on the list below just put "other".</p>
-         <p>List of classes: '7P', '7U', '7C', '7H', '7O', '7N', '7G',
+        <p>If you are in primary just put primary. If you are not from Taylor Puchong please put "not in this school". </p>
+        <p>However, if you do not see your own class on the list below just put "other classes". If you are working in Taylor Puchong (especially teachers) then just put 'TISPC'. </p>
+        <br>
+        <p>List of values you can put: 'TISPC', 'other classes', 'not in this school', 'primary', '7P', '7U', '7C', '7H', '7O', '7N', '7G',
         '8P', '8U', '8C', '8H', '8O', '8N', '8G',
         '9P', '9U', '9C', '9H', '9O', '9N', '9G',
         '10P', '10U', '10C', '10H', '10O', '10N', '10G',
@@ -236,13 +243,11 @@
       const touch = document.getElementById("payment_touch");
       const transactionName = document.getElementById("transaction_name_id");
       const transactionNametitle = document.getElementById("title_transaction");
-      const qrCode = document.getElementById("qr_code");
 
       const show = touch.checked;
       transactionName.style.display = show ? "block" : "none";
       transactionName.required = show;
       transactionNametitle.style.display = show ? "block" : "none";
-      qrCode.style.display = show ? "block" : "none";
     }
 
     function checkEmail() {
@@ -268,7 +273,7 @@
     }
 
     function checkClass() {
-      const allowed_classes = ['other classes', 'not in this school', 'primary',
+      const allowed_classes = ['other classes', 'TISPC', 'not in this school', 'primary',
         '7P', '7U', '7C', '7H', '7O', '7N', '7G',
         '8P', '8U', '8C', '8H', '8O', '8N', '8G',
         '9P', '9U', '9C', '9H', '9O', '9N', '9G',
@@ -278,7 +283,7 @@
       const user_class = document.querySelector('[name="user_class"]').value.trim();
 
       if (!allowed_classes.includes(user_class)) {
-        alert("Class input must match a valid class (e.g., '7P', '10O', 'primary', etc.)");
+        alert("Class input must match a valid class (e.g., '7P', '10O', 'primary', etc.) \n Do not put any quotation marks.");
         return false;
       }
 
