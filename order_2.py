@@ -285,7 +285,7 @@ def confirm():
             
                 error_email = check_email(email)
                 error_class = check_class(userclass)
-                error_phone = check_phone(phone_num)
+                error_phone, phone_num = check_phone(phone_num)
 
                 if error_email or error_class or error_phone:
                       return f"{error_email or ''}<br>{error_class or ''}<br>{error_phone or ''}"
