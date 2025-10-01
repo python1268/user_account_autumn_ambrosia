@@ -115,7 +115,7 @@ def check_class(userclass):
 def check_email(email):
     pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     min_length = 5
-    max_length = 254
+    max_length = 35
 
     if email is None or email.strip() == "":
         return "<h3>Please provide your email.</h3>"
@@ -228,7 +228,7 @@ def confirm():
 
     for thing in orderdata["order"]:
                  print(thing[0])
-                 thing[1] = int(thing[1])
+                 thing[1] = float(thing[1])
                  print(thing[1])
                  print(thing[2])
 
@@ -253,7 +253,7 @@ def confirm():
                  if thing[2] in [t.strip() for t in product_topping_list[name_index].split(",")]: 
                      for y in topping_price:
                          if thing[2] == y[0]:
-                           extra_topping_price = int(y[1])*thing[1]
+                           extra_topping_price = float(y[1])*thing[1]
                            total_price += extra_topping_price
                            print(product_topping_list[name_index].split(", "))
                            print(total_price)
