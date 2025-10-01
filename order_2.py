@@ -76,7 +76,12 @@ def load_data():
 
 load_data()
 
-list_class = ['other', 'not in this school', 'primary', '7P', '7U', '7C', '7H', '7O', '7N', '7G', '8P', '8U', '8C', '8H', '8O', '8N', '8G', '9P', '9U', '9C', '9H', '9O', '9N', '9G', '10P', '10U', '10C', '10H', '10O', '10N', '10G', '11P', '11U', '11C', '11H', '11O', '11N', '11G']
+list_class = ['other classes', 'TISPC', 'not in this school', 'primary',
+        '7P', '7U', '7C', '7H', '7O', '7N', '7G',
+        '8P', '8U', '8C', '8H', '8O', '8N', '8G',
+        '9P', '9U', '9C', '9H', '9O', '9N', '9G',
+        '10P', '10U', '10C', '10H', '10O', '10N', '10G',
+        '11P', '11U', '11C', '11H', '11O', '11N', '11G']
 
 def get_ipaddr():
     # If behind a proxy/load balancer, use the first IP in X-Forwarded-For
