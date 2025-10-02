@@ -178,14 +178,14 @@
           <p id="paid">If you have already paid using this QR code for your ordered items, then you do not need to pay again as we will check our transaction history and inform you whether you have paid or not.</p>
         </div>
         <h4 class="input_form" id="title_transaction">TNG transaction name (to identify your payment):</h4>
-        <input type="text" name="transaction_name" id="transaction_name_id" class="input_text">
+        <input type="text" name="transaction_name" id="transaction_name_id" class="input_text" placeholder="transaction name" />
 
         <h4 class="input_form">Your email:</h4>
-        <input id="email_input" type="email" name="user_email" class="input_text" required>
+        <input id="email_input" type="email" name="user_email" class="input_text" placeholder="your email" required/>
 
         <h4 class="input_form">Your class:</h4>
-        <input type="text" name="user_class" class="input_text" required>
-        <p>If you are in primary just put primary. If you are not from Taylor Puchong please put "not in this school". </p>
+        <input type="text" name="user_class" class="input_text" placeholder="class" required>
+        <p>If you are in primary just put 'primary'. If you are not from Taylor Puchong please put "not in this school". </p>
         <p>However, if you do not see your own class on the list below just put "other classes". If you are working in Taylor Puchong (especially teachers) then just put 'TISPC'. </p>
         <br>
         <p>List of values you can put: 'TISPC', 'other classes', 'not in this school', 'primary', '7P', '7U', '7C', '7H', '7O', '7N', '7G',
@@ -194,7 +194,7 @@
         '10P', '10U', '10C', '10H', '10O', '10N', '10G',
         '11P', '11U', '11C', '11H', '11O', '11N', '11G'</p>
         <h4 class="input_form">Your phone number (optional):</h4>
-        <input type="tel" name="user_phone" pattern="[0-9]{10}" class="input_text">
+        <input type="tel" name="user_phone" pattern="[0-9]{10}" placeholder="phone number" class="input_text">
         <p>Note: Phone number must be in this format (example: 0101234567).</p>
       </fieldset>
       <button id="submit_button" type="submit">Proceed</button>
