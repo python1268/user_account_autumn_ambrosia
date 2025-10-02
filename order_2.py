@@ -69,10 +69,6 @@ def load_data():
     product_topping_list = sheet_product.col_values(3)[1:]
     topping_list = sheet_product.col_values(4)[1:]
     topping_price = sheet_product_two.get_all_values()
-    print(name_list)
-    print(topping_list)
-    print(price_list)
-    print(topping_price)
 
 load_data()
 
@@ -169,7 +165,6 @@ product_list = []
 
 for x,y,z in zip(name_list,topping_list,price_list):
     product_list.append([x,y,float(z)])
-    print(product_list)
     
 app.secret_key = secrets.token_urlsafe(16)  # Required for CSRF token signing
 
@@ -203,17 +198,14 @@ def get_token():
 def submit_order():
     token = request.args.get("token")
     if not token or not r.exists(token):
-        print("Error")
         return jsonify({"error": "Invalid token. Either the session is expired or deleted. If you have not complete the order confirmation form please go back to our website and try again."}), 401
 
     order_data = request.json.get("order_items")  # frontend sends entire order
     if not order_data:
-        print("Error")
         return jsonify({"error": "Order data required"}), 400
     
     username = request.json.get("username")  # frontend sends entire order
     if not username:
-        print("Error")
         return jsonify({"error": "Username required"}), 400
 
     # Save final order for this token
@@ -244,26 +236,23 @@ def confirm():
     total = 0
 
     for thing in orderdata["order"]:
-                 print(thing[0])
-                 thing[1] = float(thing[1])
-                 print(thing[1])
-                 print(thing[2])
-
+                 thing[1] = int(thing[1])
+                
                  if thing[0] not in name_list:
-                     print(f"name")
                      return f"<h4>We do not have {escape(thing[0])} in our menu</h4>"
                  else:
                      name_index = name_list.index(thing[0])
+
+                 if thing[1] <= 0:
+                     return f"<h4>Selected items must not have the quantity of 0 or lesser.</h4>"
                  
                  if thing[1] > 40:
-                     print(thing[1])
                      return f"<h4>Too many</h4>"
                  
-                 print("Run")
 
                  for x in product_list:
                          if thing[0] == x[0]:
-                             per_price = x[2]
+                             per_price = float(x[2])
                              total_price = per_price*thing[1]
                              break
               
@@ -272,17 +261,13 @@ def confirm():
                          if thing[2] == y[0]:
                            extra_topping_price = float(y[1])*thing[1]
                            total_price += extra_topping_price
-                           print(product_topping_list[name_index].split(", "))
-                           print(total_price)
                            thing.append(total_price)
                            total += total_price
-                           print(f"Amount: {total}")
                          else:
-                                print("Failed")
+                                pass
                  else:
                         return f"<h4>We do not have {escape(thing[2])} in our topping menu</h4>"
     
-    print("Running")
     orderdata["total"] = total
             
     print("TOTAL:", total)
