@@ -204,7 +204,7 @@ def submit_order():
     token = request.args.get("token")
     if not token or not r.exists(token):
         print("Error")
-        return jsonify({"error": "Invalid token"}), 401
+        return jsonify({"error": "Invalid token. Either the session is expired or deleted. If you have not complete the order confirmation form please go back to our website and try again."}), 401
 
     order_data = request.json.get("order_items")  # frontend sends entire order
     if not order_data:
@@ -232,7 +232,7 @@ def submit_order():
 def confirm():
     token = request.args.get("token")
     if not token or not r.exists(token):
-        return jsonify({"error": "Invalid token"}), 401
+        return jsonify({"error": "Invalid token. Either the session is expired or deleted. If you have not completed the order confirmation form please go back to our website and try again."}), 401
     
     orderdata = r.json.get(token, "$")
     orderdata = orderdata[0]
