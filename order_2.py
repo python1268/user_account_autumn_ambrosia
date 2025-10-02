@@ -224,7 +224,7 @@ def submit_order():
 def confirm():
     token = request.args.get("token")
     if not token or not r.exists(token):
-        return jsonify({"error": "Invalid token. Either the session is expired or deleted. If you have not completed the order confirmation form please go back to our website and try again."}), 401
+        return jsonify({"error": "Invalid token. Either the session is expired or deleted. If you have not completed the order confirmation form please go back to our website and try again by hitting the place order button again."}), 401
     
     orderdata = r.json.get(token, "$")
     orderdata = orderdata[0]
@@ -246,7 +246,7 @@ def confirm():
                  if thing[1] <= 0:
                      return f"<h4>Selected items must not have the quantity of 0 or lesser.</h4>"
                  
-                 if thing[1] > 40:
+                 if thing[1] > 80:
                      return f"<h4>Too many</h4>"
                  
 
