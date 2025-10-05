@@ -296,10 +296,6 @@ def confirm():
                              sheet_customer_cash.append_row([sanitize_for_sheet(orderdata["customer"]),sanitize_for_sheet(order_summary),sanitize_for_sheet(email),sanitize_for_sheet(userclass),sanitize_for_sheet(phone_num),total])
                            else:
                              sheet_customer_cash2.append_row([sanitize_for_sheet(orderdata["customer"]),sanitize_for_sheet(order_summary),sanitize_for_sheet(email),sanitize_for_sheet(userclass),sanitize_for_sheet(phone_num),total])
-
-                           email_data = {"order": orderdata["order"], "email": email}
-                           response = req.post("https://script.google.com/macros/s/AKfycbyOC_-Kn-DxY3FSKrQBMqX_qikVrxz0MwXpEL_KqQnw8-IUPHeAqCWXwnULbbIrILan/exec", json=email_data, headers={'Content-Type':'application/json'})
-                           print(response.status_code)
                            r.delete(token)
                         except Exception as e:
                             return f"Error in confirm: {str(e)}" 
@@ -310,10 +306,6 @@ def confirm():
                                   sheet_customer_tng.append_row([sanitize_for_sheet(orderdata["customer"]),sanitize_for_sheet(order_summary),sanitize_for_sheet(email),sanitize_for_sheet(userclass),sanitize_for_sheet(phone_num), sanitize_for_sheet(transaction_name), total])
                              else: 
                                    sheet_customer_tng2.append_row([sanitize_for_sheet(orderdata["customer"]),sanitize_for_sheet(order_summary),sanitize_for_sheet(email),sanitize_for_sheet(userclass),sanitize_for_sheet(phone_num), sanitize_for_sheet(transaction_name), total])
-                                     
-                             email_data = {"order": orderdata["order"], "email": email}
-                             response = req.post("https://script.google.com/macros/s/AKfycbyOC_-Kn-DxY3FSKrQBMqX_qikVrxz0MwXpEL_KqQnw8-IUPHeAqCWXwnULbbIrILan/exec", json=email_data, headers={'Content-Type':'application/json'})
-                             print(response.status_code)
                              r.delete(token)
                             except Exception as e:
                               return f"Error in confirm: {str(e)}"
